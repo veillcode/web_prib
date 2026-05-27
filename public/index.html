@@ -1735,33 +1735,47 @@ async function doGoogleLensScan() {
   if (!scanImageFile) return;
   const btn = document.getElementById('btn-scan');
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengupload gambar…';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Membuka Google Lens…';
 
   try {
-    const token = localStorage.getItem(TOKEN_KEY);
-    const form = new FormData();
-    form.append('image', scanImageFile);
-
-    // Upload ke server dulu
-    const res = await fetch('/api/scan/upload', {
-      method: 'POST',
-      headers: { Authorization: 'Bearer ' + token },
-      body: form
+    // Convert ke base64
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = e => resolve(e.target.result.split(',')[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(scanImageFile);
     });
-    const data = await res.json();
 
-    if (!res.ok) throw new Error(data.error || 'Gagal upload');
+    // Kirim langsung ke Google Lens via form POST
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'https://lens.google.com/upload?ep=ccm&s=&st=' + Date.now();
+    form.enctype = 'multipart/form-data';
+    form.target = '_blank';
+    form.style.display = 'none';
 
-    // Kirim URL ke Google Lens
-    const lensUrl = `https://lens.google.com/uploadbyurl?url=${encodeURIComponent(data.url)}`;
-    window.open(lensUrl, '_blank');
+    const dt = new DataTransfer();
+    dt.items.add(scanImageFile);
+
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.name = 'encoded_image';
+    input.files = dt.files;
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+
     showToast('Membuka Google Lens…', 'success');
 
   } catch(err) {
     showToast('Gagal: ' + err.message, 'error');
   } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Cari Kemiripan di Google Lens';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Cari Kemiripan di Google Lens';
+    }, 1500);
   }
 }
 
