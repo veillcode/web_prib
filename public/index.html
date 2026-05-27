@@ -1735,25 +1735,38 @@ async function doGoogleLensScan() {
   if (!scanImageFile) return;
   const btn = document.getElementById('btn-scan');
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyiapkan…';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Membuka Google Lens…';
 
   try {
-    // Copy gambar ke clipboard
-    const blob = new Blob([await scanImageFile.arrayBuffer()], { type: scanImageFile.type });
-    await navigator.clipboard.write([
-      new ClipboardItem({ [scanImageFile.type]: blob })
-    ]);
+    const dt = new DataTransfer();
+    dt.items.add(scanImageFile);
 
-    // Buka Google Lens
-    window.open('https://lens.google.com/', '_blank');
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.name = 'encoded_image';
+    input.files = dt.files;
 
-    showToast('✅ Gambar ter-copy! Tekan Ctrl+V di Google Lens!', 'success');
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = 'https://lens.google.com/upload?ep=ccm&s=&st=' + Date.now();
+    form.enctype = 'multipart/form-data';
+    form.target = '_blank';
+    form.style.display = 'none';
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+
+    showToast('Membuka Google Lens…', 'success');
 
   } catch(err) {
     showToast('Gagal: ' + err.message, 'error');
   } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Scan di Google Lens';
+    setTimeout(() => {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Cari Kemiripan di Google Lens';
+    }, 1500);
   }
 }
 
