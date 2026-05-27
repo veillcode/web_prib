@@ -718,9 +718,11 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     <!-- Avatar Section -->
     <div class="profile-avatar-section">
       <!-- Avatar besar, klik untuk upload -->
-      <div class="profile-avatar-big" id="modal-avatar" onclick="triggerAvatarUpload()">
+      <div class="profile-avatar-big" id="modal-avatar">
         A
-        <div class="avatar-cam-overlay"><i class="fas fa-camera"></i></div>
+        <div class="avatar-cam-overlay" onclick="triggerAvatarUpload()" style="pointer-events:all;cursor:pointer">
+          <i class="fas fa-camera"></i>
+        </div>
       </div>
       <div>
         <h4 id="modal-displayname" style="font-size:16px;font-weight:700;margin-bottom:2px"></h4>
@@ -1550,8 +1552,10 @@ function switchTab(tab){
 
 /* ── FOTO PROFIL ─────────────────────────────────── */
 function triggerAvatarUpload(){
-  document.getElementById('avatar-file-input').value='';
-  document.getElementById('avatar-file-input').click();
+  const inp = document.getElementById('avatar-file-input');
+  inp.value = '';
+  // Pakai setTimeout kecil untuk hindari double-trigger
+  setTimeout(() => inp.click(), 50);
 }
 
 async function uploadAvatar(input){
@@ -1927,6 +1931,16 @@ function goToStats() {
 }
 
 function renderStats() {
+  const typeColors = {
+    'pdf':  '#FF6B6B',
+    'doc':  '#4ECDC4',
+    'ppt':  '#FF9F43',
+    'xls':  '#26de81',
+    'zip':  '#FED330',
+    'txt':  '#A29BFE',
+    'img':  '#fd79a8',
+    'other':'#74b9ff'
+  };
   document.getElementById('stats-total-files').textContent = currentFiles.length;
   document.getElementById('stats-total-size').textContent = formatSize(currentFiles.reduce((a,f)=>a+f.size,0));
   document.getElementById('stats-total-folders').textContent = currentFolders.length;
