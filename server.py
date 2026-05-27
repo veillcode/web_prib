@@ -660,7 +660,33 @@ def remove_bg(file_id):
     except Exception as e:
         return jsonify({'error': f'Gagal memproses gambar: {str(e)}'}), 500
 
-
+@app.route('/api/scan/upload', methods=['POST'])
+@auth_required
+def scan_upload():
+    if 'image' not in request.files:
+        return jsonify({'error': 'Tidak ada gambar.'}), 400
+    
+    file = request.files['image']
+    ext = os.path.splitext(file.filename)[1].lower()
+    unique_name = uuid.uuid4().hex + ext
+    
+    scan_dir = os.path.join(PUBLIC_DIR, 'scans')
+    os.makedirs(scan_dir, exist_ok=True)
+    
+    path = os.path.join(scan_dir, unique_name)
+    file.save(path)
+    
+    import threading
+    def delete_later():
+        import time
+        time.sleep(300)
+        if os.path.exists(path):
+            os.remove(path)
+    threading.Thread(target=delete_later, daemon=True).start()
+    
+    host = request.host_url.rstrip('/')
+    public_url = f"{host}/scans/{unique_name}"
+    return jsonify({'url': public_url})
 # ══════════════════════════════════════════════════
 if __name__ == '__main__':
     print(f'\n🚀 Veilfile Python Backend')
