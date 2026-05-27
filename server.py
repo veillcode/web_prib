@@ -282,22 +282,9 @@ def get_avatar(user_id):
 @app.route('/api/profile/avatar', methods=['DELETE'])
 @auth_required
 def delete_avatar():
-    """Hapus foto profil, kembali ke avatar inisial berwarna."""
-    db      = load_db()
-    profile = next((p for p in db['profiles'] if p['userId'] == request.user_id), None)
-    if not profile:
-        return jsonify({'error': 'Profil tidak ditemukan.'}), 404
-
-    old_avatar = profile.get('avatarFile')
-    if old_avatar:
-        old_path = os.path.join(AVATARS_DIR, old_avatar)
-        if os.path.exists(old_path):
-            os.remove(old_path)
-        profile['avatarFile'] = None
-        profile['updatedAt']  = datetime.now(timezone.utc).isoformat()
-        save_db(db)
-
-    return jsonify({'message': 'Foto profil berhasil dihapus.'})
+    ...
+    return jsonify({'message': 'Avatar berhasil dihapus.'})
+    return jsonify({'error': 'Profil tidak ditemukan.'}), 404
 
 
 @app.route('/api/profile/password', methods=['PUT'])
