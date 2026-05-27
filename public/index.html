@@ -538,6 +538,35 @@ body.light-mode .upload-zone{background:rgba(255,255,255,0.7);border-color:rgba(
 body.light-mode .modal-box{background:rgba(255,255,255,0.97)}
 body.light-mode{--text-primary:#1a1a2e;--text-secondary:rgba(26,26,46,0.6)}
 body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0.85),rgba(230,235,250,0.85))}
+
+/* ── STATS PAGE ── */
+#page-stats{flex-direction:column;background:#0d0d1a;min-height:100vh}
+#page-stats.active{display:flex}
+.stats-body{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;position:relative;z-index:10}
+.stats-card{width:100%;max-width:900px;background:rgba(255,255,255,0.07);backdrop-filter:blur(22px);border:1px solid rgba(255,255,255,0.14);border-radius:28px;padding:44px 40px;box-shadow:0 20px 60px rgba(0,0,0,0.4);animation:fadeUp .6s cubic-bezier(.4,0,.2,1) both}
+.stats-title{text-align:center;margin-bottom:36px}
+.stats-title .stats-icon{width:64px;height:64px;border-radius:20px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:26px;color:#fff;box-shadow:0 4px 24px rgba(167,139,250,0.45);animation:logoPulse 3s ease-in-out infinite}
+.stats-title h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;background:linear-gradient(135deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px}
+.stats-title p{font-size:13px;color:var(--text-secondary)}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
+.stats-item{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px;text-align:center}
+.stats-item-val{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stats-item-lbl{font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.8px;margin-top:4px}
+.chart-wrap{position:relative;width:100%;height:300px;margin-bottom:32px}
+.chart-section-title{font-size:14px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.filetype-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:24px}
+.filetype-item{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px}
+.filetype-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.filetype-info{flex:1;min-width:0}
+.filetype-name{font-size:12px;font-weight:600;color:var(--text-primary)}
+.filetype-count{font-size:11px;color:var(--text-secondary)}
+.upload-history{display:flex;flex-direction:column;gap:8px}
+.upload-bar-row{display:flex;align-items:center;gap:10px}
+.upload-bar-label{font-size:11px;color:var(--text-secondary);width:80px;text-align:right;flex-shrink:0}
+.upload-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:10px;overflow:hidden}
+.upload-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1s cubic-bezier(.4,0,.2,1)}
+.upload-bar-val{font-size:11px;color:var(--text-secondary);width:30px;flex-shrink:0}
+@media(max-width:640px){.stats-card{padding:24px 16px}.stats-grid{grid-template-columns:repeat(2,1fr)}.chart-wrap{height:220px}}
 </style>
 </head>
 <body>
@@ -635,6 +664,9 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
         <i class="fas fa-search"></i>
         <input class="search-input" id="search-input" type="text" placeholder="Cari nama file…" oninput="onSearch()">
       </div>
+        <button class="btn-toolbar" onclick="goToStats()" style="background:rgba(96,165,250,0.12);color:var(--accent2);border:1px solid rgba(96,165,250,0.25)">
+          <i class="fas fa-chart-line"></i> Statistik
+        </button>
         <button class="btn-toolbar" onclick="goToScanner()" style="background:rgba(96,165,250,0.12);color:var(--accent2);border:1px solid rgba(96,165,250,0.25)">
             <i class="fas fa-camera-viewfinder"></i> Scanner
         </button>
@@ -935,6 +967,70 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
           <span>Hasil akan dibuka di tab baru Google Lens</span>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+<!-- STATS PAGE -->
+<div id="page-stats" class="page" style="display:none">
+  <nav class="topbar">
+    <div class="topbar-brand">
+      <div class="topbar-logo"><i class="fas fa-file-arrow-up"></i></div>
+      <span class="topbar-title">Veilfile</span>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-theme" id="btn-theme-stats" onclick="toggleTheme()" title="Ganti tema">
+        <i class="fas fa-sun" id="theme-icon-stats"></i>
+      </button>
+      <div class="topbar-user" onclick="openProfileModal()">
+        <div class="user-avatar" id="stats-avatar">A</div>
+        <span class="user-name" id="stats-username">User</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">
+        <i class="fas fa-arrow-right-from-bracket"></i> Keluar
+      </button>
+    </div>
+  </nav>
+
+  <div class="stats-body">
+    <button class="btn-back-dash" onclick="goToDashboard()">
+      <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
+    </button>
+
+    <div class="stats-card">
+      <div class="stats-title">
+        <div class="stats-icon"><i class="fas fa-chart-line"></i></div>
+        <h2>Statistik Storage</h2>
+        <p>Ringkasan penggunaan penyimpanan kamu</p>
+      </div>
+
+      <!-- Summary -->
+      <div class="stats-grid">
+        <div class="stats-item">
+          <div class="stats-item-val" id="stats-total-files">0</div>
+          <div class="stats-item-lbl">Total File</div>
+        </div>
+        <div class="stats-item">
+          <div class="stats-item-val" id="stats-total-size">0 KB</div>
+          <div class="stats-item-lbl">Total Storage</div>
+        </div>
+        <div class="stats-item">
+          <div class="stats-item-val" id="stats-total-folders">0</div>
+          <div class="stats-item-lbl">Total Folder</div>
+        </div>
+      </div>
+
+      <!-- Donut Chart -->
+      <div class="chart-section-title"><i class="fas fa-circle-half-stroke"></i> Distribusi Tipe File</div>
+      <div class="chart-wrap">
+        <canvas id="donut-chart"></canvas>
+      </div>
+
+      <!-- File Type Grid -->
+      <div class="filetype-grid" id="filetype-grid"></div>
+
+      <!-- Upload History -->
+      <div class="chart-section-title" style="margin-top:24px"><i class="fas fa-clock-rotate-left"></i> Upload 7 Hari Terakhir</div>
+      <div class="upload-history" id="upload-history"></div>
     </div>
   </div>
 </div>
@@ -1800,7 +1896,155 @@ function toggleTheme(){
     }, 100);
   }
 })();
+/* ── STATS PAGE ── */
+function goToStats() {
+  const profile = currentUser?.profile || {};
+  const displayName = profile.displayName || currentUser?.username || 'User';
+  document.getElementById('stats-username').textContent = displayName;
 
+  const av = document.getElementById('stats-avatar');
+  if (profile.avatarFile) {
+    av.innerHTML = `<img src="/api/profile/avatar/${currentUser.id}?t=${Date.now()}" alt="avatar">`;
+    av.style.background = 'transparent';
+  } else {
+    av.textContent = displayName[0].toUpperCase();
+    av.style.background = profile.avatarColor
+      ? `linear-gradient(135deg,${profile.avatarColor},${profile.avatarColor}99)`
+      : 'linear-gradient(135deg,var(--accent),var(--accent3))';
+  }
+
+  document.getElementById('page-stats').style.display = 'flex';
+  showPage('stats');
+  renderStats();
+}
+
+function renderStats() {
+  // Summary
+  document.getElementById('stats-total-files').textContent = currentFiles.length;
+  document.getElementById('stats-total-size').textContent = formatSize(currentFiles.reduce((a,f)=>a+f.size,0));
+  document.getElementById('stats-total-folders').textContent = currentFolders.length;
+
+  // File types
+  const types = {};
+  const typeColors = {
+    'pdf':'#fc8181','doc':'#60a5fa','ppt':'#fb923c',
+    'xls':'#68d391','zip':'#fbbf24','txt':'#a78bfa',
+    'img':'#f472b6','other':'#94a3b8'
+  };
+  currentFiles.forEach(f => {
+    const {type} = getFileType(f.originalName||'');
+    types[type] = (types[type]||0) + 1;
+  });
+
+  // Donut chart
+  const canvas = document.getElementById('donut-chart');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth || 300;
+  canvas.height = canvas.offsetHeight || 300;
+
+  const entries = Object.entries(types);
+  const total = entries.reduce((a,[,v])=>a+v,0);
+  const cx = canvas.width/2, cy = canvas.height/2;
+  const r = Math.min(cx,cy) - 20;
+  const inner = r * 0.55;
+
+  if(total === 0) {
+    ctx.fillStyle = 'rgba(255,255,255,0.1)';
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle = '#0d0d1a';
+    ctx.beginPath();
+    ctx.arc(cx, cy, inner, 0, Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '14px Poppins';
+    ctx.textAlign = 'center';
+    ctx.fillText('Belum ada file', cx, cy+5);
+  } else {
+    let start = -Math.PI/2;
+    entries.forEach(([type, count]) => {
+      const slice = (count/total) * Math.PI*2;
+      const color = typeColors[type] || '#94a3b8';
+      ctx.beginPath();
+      ctx.moveTo(cx, cy);
+      ctx.arc(cx, cy, r, start, start+slice);
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+      ctx.strokeStyle = '#0d0d1a';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      start += slice;
+    });
+    // Inner circle
+    ctx.beginPath();
+    ctx.arc(cx, cy, inner, 0, Math.PI*2);
+    ctx.fillStyle = '#0d0d1a';
+    ctx.fill();
+    // Center text
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 28px Poppins';
+    ctx.textAlign = 'center';
+    ctx.fillText(total, cx, cy+2);
+    ctx.fillStyle = 'rgba(255,255,255,0.5)';
+    ctx.font = '12px Poppins';
+    ctx.fillText('file', cx, cy+20);
+  }
+
+  // File type grid
+  const grid = document.getElementById('filetype-grid');
+  grid.innerHTML = '';
+  entries.forEach(([type, count]) => {
+    const color = typeColors[type] || '#94a3b8';
+    const div = document.createElement('div');
+    div.className = 'filetype-item';
+    div.innerHTML = `
+      <div class="filetype-dot" style="background:${color}"></div>
+      <div class="filetype-info">
+        <div class="filetype-name">${type.toUpperCase()}</div>
+        <div class="filetype-count">${count} file</div>
+      </div>`;
+    grid.appendChild(div);
+  });
+
+  // Upload history 7 hari
+  const history = document.getElementById('upload-history');
+  history.innerHTML = '';
+  const days = [];
+  for(let i=6;i>=0;i--){
+    const d = new Date();
+    d.setDate(d.getDate()-i);
+    days.push(d);
+  }
+  const maxCount = Math.max(...days.map(d => {
+    const str = d.toISOString().split('T')[0];
+    return currentFiles.filter(f=>f.uploadedAt&&f.uploadedAt.startsWith(str)).length;
+  }), 1);
+
+  days.forEach(d => {
+    const str = d.toISOString().split('T')[0];
+    const count = currentFiles.filter(f=>f.uploadedAt&&f.uploadedAt.startsWith(str)).length;
+    const pct = Math.round((count/maxCount)*100);
+    const label = d.toLocaleDateString('id-ID',{weekday:'short',day:'numeric'});
+    const row = document.createElement('div');
+    row.className = 'upload-bar-row';
+    row.innerHTML = `
+      <div class="upload-bar-label">${label}</div>
+      <div class="upload-bar-wrap">
+        <div class="upload-bar-fill" style="width:0%" data-pct="${pct}"></div>
+      </div>
+      <div class="upload-bar-val">${count}</div>`;
+    history.appendChild(row);
+  });
+
+  // Animasi bar
+  setTimeout(()=>{
+    document.querySelectorAll('.upload-bar-fill').forEach(el=>{
+      el.style.width = el.dataset.pct + '%';
+    });
+  }, 100);
+}
 </script>
 </body>
 </html>
