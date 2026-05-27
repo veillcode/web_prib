@@ -1737,38 +1737,36 @@ function doGoogleLensScan() {
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Membuka Google Lens…';
 
-  const formData = new FormData();
-  formData.append('encoded_image', scanImageFile);
-  formData.append('image_content', '');
-
-  // Buat form tersembunyi dan submit ke Google Lens
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = 'https://lens.google.com/upload?ep=ccm&s=&st=' + Date.now();
-  form.enctype = 'multipart/form-data';
-  form.target = '_blank';
-  form.style.display = 'none';
-
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.name = 'encoded_image';
-
-  // Transfer file ke input
-  const dt = new DataTransfer();
-  dt.items.add(scanImageFile);
-  input.files = dt.files;
-
-  form.appendChild(input);
-  document.body.appendChild(form);
-  form.submit();
-  document.body.removeChild(form);
-
-  setTimeout(() => {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Cari Kemiripan di Google Lens';
-    showToast('Google Lens dibuka di tab baru!', 'success');
-  }, 1500);
+  // Convert file ke base64 lalu buka via URL
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    // Cara 1: Buka Google Lens upload page langsung
+    const lensUrl = 'https://lens.google.com/upload';
+    
+    // Buat blob URL dan arahkan user
+    const blob = new Blob([scanImageFile], { type: scanImageFile.type });
+    const blobUrl = URL.createObjectURL(blob);
+    
+    // Simpan file ke clipboard info, buka Google Lens
+    // lalu user tinggal paste/drop gambar
+    window.open(lensUrl, '_blank');
+    
+    // Download gambar otomatis agar user bisa drag ke Google Lens
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = scanImageFile.name || 'scan-image.jpg';
+    a.click();
+    
+    setTimeout(() => {
+      URL.revokeObjectURL(blobUrl);
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Cari Kemiripan di Google Lens';
+      showToast('Gambar diunduh — drag ke Google Lens yang terbuka!', 'success');
+    }, 1500);
+  };
+  reader.readAsDataURL(scanImageFile);
 }
+
 </script>
 </body>
 </html>
