@@ -566,7 +566,14 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
 .upload-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:10px;overflow:hidden}
 .upload-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1s cubic-bezier(.4,0,.2,1)}
 .upload-bar-val{font-size:11px;color:var(--text-secondary);width:30px;flex-shrink:0}
-@media(max-width:640px){.stats-card{padding:24px 16px}.stats-grid{grid-template-columns:repeat(2,1fr)}.chart-wrap{height:220px}}
+@media(max-width:640px){
+  .stats-card{padding:24px 16px}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .chart-wrap{height:200px}
+  #page-stats .stats-body > .stats-card > div[style*="grid-template-columns:1fr 1fr"]{
+    grid-template-columns:1fr !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -1925,10 +1932,10 @@ function renderStats() {
   document.getElementById('stats-total-folders').textContent = currentFolders.length;
 
   const types = {};
-  const typeColors = {
-    'pdf':'#FF6B6B','doc':'#4ECDC4','ppt':'#FF9F43',
-    'xls':'#26de81','zip':'#FED330','txt':'#A29BFE',
-    'img':'#fd79a8','other':'#74b9ff'
+  const typeLabels = {
+    'pdf':'PDF','doc':'Word','ppt':'PowerPoint',
+    'xls':'Excel','zip':'Archive','txt':'Teks',
+    'img':'Gambar','other':'Video/Audio/Lainnya'
   };
   const typeGlow = {
     'pdf':'rgba(255,107,107,0.6)','doc':'rgba(78,205,196,0.6)',
@@ -2011,7 +2018,7 @@ function renderStats() {
     div.innerHTML = `
       <div class="filetype-dot" style="background:${color};box-shadow:0 0 8px ${color}"></div>
       <div class="filetype-info">
-        <div class="filetype-name" style="color:${color}">${type.toUpperCase()}</div>
+        <div class="filetype-name" style="color:${color}">${typeLabels[type]||type.toUpperCase()}</div>
         <div class="filetype-count">${count} file · ${pct}%</div>
       </div>`;
     grid.appendChild(div);
@@ -2057,7 +2064,7 @@ function renderStats() {
       bctx.fillStyle = 'rgba(255,255,255,0.5)';
       bctx.font = '10px Poppins';
       bctx.textAlign = 'center';
-      bctx.fillText(type.toUpperCase(), x+barW/2, bh-pad+14);
+      bctx.fillText(typeLabels[type]||type.toUpperCase(), x+barW/2, bh-pad+14);
 
       // Nilai atas
       bctx.fillStyle = color;
