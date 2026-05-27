@@ -174,6 +174,152 @@ def update_profile():
             return jsonify({'message': 'Profil berhasil diperbarui.', 'profile': p})
     return jsonify({'error': 'Profil tidak ditemukan.'}), 404
 
+@app.route('/api/profile/avatar', methods=['POST'])
+@auth_required
+def upload_avatar():
+    if 'avatar' not in request.files:
+        return jsonify({'error': 'Tidak ada file avatar.'}), 400
+    file = request.files['avatar']
+    ext  = os.path.splitext(file.filename)[1].lower()
+    if ext not in ['.jpg', '.jpeg', '.png', '.webp', '.gif']:
+        return jsonify({'error': 'Format tidak didukung.'}), 400
+    file.seek(0, 2)
+    size = file.tell()
+    file.seek(0)
+    if size > 5 * 1024 * 1024:
+        return jsonify({'error': 'Ukuran file maksimal 5MB.'}), 400
+    avatar_dir = os.path.join(UPLOADS_DIR, request.user_id, 'avatar')
+    os.makedirs(avatar_dir, exist_ok=True)
+    unique_name = 'avatar_' + uuid.uuid4().hex[:10] + ext
+    save_path   = os.path.join(avatar_dir, unique_name)
+    file.save(save_path)
+    db = load_db()
+    for p in db['profiles']:
+        if p['userId'] == request.user_id:
+            old = p.get('avatarFile')
+            if old:
+                old_path = os.path.join(UPLOADS_DIR, request.user_id, 'avatar', old)
+                if os.path.exists(old_path):
+                    os.remove(old_path)
+            p['avatarFile'] = unique_name
+            p['updatedAt']  = datetime.now(timezone.utc).isoformat()
+            save_db(db)
+            return jsonify({'message': 'Avatar berhasil diupload.', 'avatarFile': unique_name})
+    return jsonify({'error': 'Profil tidak ditemukan.'}), 404
+
+@app.route('/api/profile/avatar/<user_id>', methods=['GET'])
+def get_avatar(user_id):
+    db      = load_db()
+    profile = next((p for p in db['profiles'] if p['userId'] == user_id), None)
+    if not profile or not profile.get('avatarFile'):
+        return jsonify({'error': 'Avatar tidak ditemukan.'}), 404
+    path = os.path.join(UPLOADS_DIR, user_id, 'avatar', profile['avatarFile'])
+    if not os.path.exists(path):
+        return jsonify({'error': 'File avatar tidak ada.'}), 404
+    return send_file(path)
+
+@app.route('/api/profile/avatar', methods=['DELETE'])
+@auth_required
+def delete_avatar():
+    db = load_db()
+    for p in db['profiles']:
+        if p['userId'] == request.user_id:
+            old = p.get('avatarFile')
+            if old:
+                old_path = os.path.join(UPLOADS_DIR, request.user_id, 'avatar', old)
+                if os.path.exists(old_path):
+                    os.remove(old_path)
+            p['avatarFile'] = None
+            p['updatedAt']  = datetime.now(timezone.utc).isoformat()
+            save_db(db)
+            return jsonify({'message': 'Avatar berhasil dihapus.'})
+    return jsonify({'error': 'Profil tidak ditemukan.'}), 404
+def upload_avatar():
+    if 'avatar' not in request.files:
+        return jsonify({'error': 'Tidak ada file avatar.'}), 400
+
+    file = request.files['avatar']
+    ext  = os.path.splitext(file.filename)[1].lower()
+    if ext not in ['.jpg', '.jpeg', '.png', '.webp', '.gif']:
+        return jsonify({'error': 'Format tidak didukung.'}), 400
+
+    # Batas 5MB
+    file.seek(0, 2)
+    size = file.tell()
+    file.seek(0)
+    if size > 5 * 1024 * 1024:
+        return jsonify({'error': 'Ukuran file maksimal 5MB.'}), 400
+
+    # Simpan file
+    avatar_dir = os.path.join(UPLOADS_DIR, request.user_id, 'avatar')
+    os.makedirs(avatar_dir, exist_ok=True)
+
+    unique_name = 'avatar_' + uuid.uuid4().hex[:10] + ext
+    save_path   = os.path.join(avatar_dir, unique_name)
+    file.save(save_path)
+
+    # Update profile di database
+    db = load_db()
+    for p in db['profiles']:
+        if p['userId'] == request.user_id:
+            # Hapus foto lama jika ada
+            old = p.get('avatarFile')
+            if old:
+                old_path = os.path.join(UPLOADS_DIR, request.user_id, 'avatar', old)
+                if os.path.exists(old_path):
+                    os.remove(old_path)
+            p['avatarFile'] = unique_name
+            p['updatedAt']  = datetime.now(timezone.utc).isoformat()
+            save_db(db)
+            return jsonify({'message': 'Avatar berhasil diupload.', 'avatarFile': unique_name})
+
+    return jsonify({'error': 'Profil tidak ditemukan.'}), 404
+
+
+@app.route('/api/profile/avatar/<user_id>', methods=['GET'])
+def get_avatar(user_id):
+    db      = load_db()
+    profile = next((p for p in db['profiles'] if p['userId'] == user_id), None)
+    if not profile or not profile.get('avatarFile'):
+        return jsonify({'error': 'Avatar tidak ditemukan.'}), 404
+
+    path = os.path.join(UPLOADS_DIR, user_id, 'avatar', profile['avatarFile'])
+    if not os.path.exists(path):
+        return jsonify({'error': 'File avatar tidak ada.'}), 404
+
+    return send_file(path)
+
+
+@app.route('/api/profile/avatar', methods=['DELETE'])
+@auth_required
+def delete_avatar():
+    db = load_db()
+    for p in db['profiles']:
+        if p['userId'] == request.user_id:
+            old = p.get('avatarFile')
+            if old:
+                old_path = os.path.join(UPLOADS_DIR, request.user_id, 'avatar', old)
+                if os.path.exists(old_path):
+                    os.remove(old_path)
+            p['avatarFile'] = None
+            p['updatedAt']  = datetime.now(timezone.utc).isoformat()
+            save_db(db)
+            return jsonify({'message': 'Avatar berhasil dihapus.'})
+
+    return jsonify({'error': 'Profil tidak ditemukan.'}), 404
+    body = request.get_json() or {}
+    db   = load_db()
+    now  = datetime.now(timezone.utc).isoformat()
+    for p in db['profiles']:
+        if p['userId'] == request.user_id:
+            if 'displayName' in body: p['displayName'] = str(body['displayName'])[:50]
+            if 'bio'         in body: p['bio']         = str(body['bio'])[:200]
+            if 'avatarColor' in body: p['avatarColor'] = body['avatarColor']
+            p['updatedAt'] = now
+            save_db(db)
+            return jsonify({'message': 'Profil berhasil diperbarui.', 'profile': p})
+    return jsonify({'error': 'Profil tidak ditemukan.'}), 404
+
 @app.route('/api/profile/password', methods=['PUT'])
 @auth_required
 def change_password():
