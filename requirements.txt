@@ -1,6 +1,7 @@
 flask
 flask-cors
-PyJWT
 bcrypt
-werkzeug
+pyjwt
 requests
+gunicorn
+werkzeug
