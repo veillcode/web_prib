@@ -7,22 +7,21 @@ from werkzeug.utils import secure_filename
 import requests
 import threading, time
 
-# ── Config ────────────────────────────────────────
-BASE_DIR    = os.path.dirname(os.path.abspath(__file__))
-DATA_FILE   = os.path.join(BASE_DIR, 'data', 'db.json')
+# Config
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, 'data', 'db.json')
 UPLOADS_DIR = os.path.join(BASE_DIR, 'uploads')
-PUBLIC_DIR  = os.path.join(BASE_DIR, 'public')
-JWT_SECRET  = os.environ.get('JWT_SECRET', 'veilfile_secret_python_2025')
-JWT_DAYS    = 7
-PORT        = int(os.environ.get('PORT', 5000))
-MAX_MB      = 50
+PUBLIC_DIR = os.path.join(BASE_DIR, 'public')
+
+JWT_SECRET = os.environ.get('JWT_SECRET', 'veilfile_secret_python_2025')
+JWT_DAYS = 7
+PORT = int(os.environ.get('PORT', 5000))
 
 os.makedirs(os.path.join(BASE_DIR, 'data'), exist_ok=True)
 os.makedirs(UPLOADS_DIR, exist_ok=True)
 
 app = Flask(__name__, static_folder=PUBLIC_DIR, static_url_path='')
 CORS(app)
-app.config['MAX_CONTENT_LENGTH'] = MAX_MB * 1024 * 1024
 
 # Database
 def load_db():
@@ -45,7 +44,7 @@ def auth_required(f):
             return jsonify({'error': 'Token tidak ditemukan.'}), 401
         try:
             payload = jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
-            request.user_id  = payload['userId']
+            request.user_id = payload['userId']
             request.username = payload['username']
         except:
             return jsonify({'error': 'Token tidak valid.'}), 401
@@ -56,20 +55,19 @@ def make_token(user_id, username):
     exp = datetime.now(timezone.utc) + timedelta(days=JWT_DAYS)
     return jwt.encode({'userId': user_id, 'username': username, 'exp': exp}, JWT_SECRET, algorithm='HS256')
 
-# SCANNER ENDPOINT (PENTING)
+# SCANNER - ENDPOINT UTAMA
 @app.route('/api/scan/upload', methods=['POST'])
 @auth_required
 def scan_upload():
     try:
         if 'image' not in request.files:
             return jsonify({'error': 'Tidak ada gambar yang dikirim.'}), 400
-        
         file = request.files['image']
         if not file.filename:
             return jsonify({'error': 'File gambar tidak valid.'}), 400
 
         ext = os.path.splitext(file.filename)[1].lower()
-        if ext not in ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.heic']:
+        if ext not in ['.jpg','.jpeg','.png','.webp','.gif','.heic']:
             return jsonify({'error': 'Format gambar tidak didukung.'}), 400
 
         unique_name = uuid.uuid4().hex + ext
@@ -81,23 +79,24 @@ def scan_upload():
 
         def delete_later():
             time.sleep(300)
-            try:
-                if os.path.exists(path):
-                    os.remove(path)
-            except:
-                pass
+            if os.path.exists(path):
+                try: os.remove(path)
+                except: pass
         threading.Thread(target=delete_later, daemon=True).start()
 
         host = request.host_url.rstrip('/')
         public_url = f"{host}/scans/{unique_name}"
 
-        return jsonify({'url': public_url, 'success': True})
+        return jsonify({'url': public_url})
 
     except Exception as e:
         print("Scanner Error:", str(e))
-        return jsonify({'error': f'Terjadi kesalahan: {str(e)}'}), 500
+        return jsonify({'error': str(e)}), 500
 
+@app.route('/')
+def index():
+    return send_from_directory(PUBLIC_DIR, 'index.html')
 
 if __name__ == '__main__':
-    print(f'\n🚀 Veilfile Backend Running on port {PORT}')
+    print(f"🚀 Veilfile Backend berjalan di port {PORT}")
     app.run(host='0.0.0.0', port=PORT, debug=False)
