@@ -6,6 +6,13 @@
       "email": "dimasaribb@gmail.com",
       "password": "$2b$12$GEOM1NTrR0hgrmllxOXwKeds1GZsT/VLX6WjhMcdCH34MWD1NP6oG",
       "createdAt": "2026-05-24T10:38:23.134321+00:00"
+    },
+    {
+      "id": "user_8aee6a039eb5",
+      "username": "drump",
+      "email": "drump@gmail.com",
+      "password": "$2b$12$2yRebjpQjGfBARXpbp.KmOBNYyaIDyqxP2jC.dJYuATLFY0ls1HI6",
+      "createdAt": "2026-05-27T07:40:35.833283+00:00"
     }
   ],
   "profiles": [
@@ -14,8 +21,17 @@
       "displayName": "dimas",
       "bio": "",
       "avatarColor": "#fb923c",
+      "avatarFile": null,
       "createdAt": "2026-05-24T10:38:23.134321+00:00",
       "updatedAt": "2026-05-24T10:38:23.134321+00:00"
+    },
+    {
+      "userId": "user_8aee6a039eb5",
+      "displayName": "drump",
+      "bio": "",
+      "avatarColor": "#34d399",
+      "createdAt": "2026-05-27T07:40:35.833283+00:00",
+      "updatedAt": "2026-05-27T07:40:35.833283+00:00"
     }
   ],
   "files": [

@@ -1,12 +1,10 @@
 from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 import json, os, uuid, bcrypt, jwt, re
-from rembg import remove
-from PIL import Image
-import io
 from datetime import datetime, timedelta, timezone
 from functools import wraps
 from werkzeug.utils import secure_filename
+import requests
 
 # ── Config ────────────────────────────────────────
 BASE_DIR    = os.path.dirname(os.path.abspath(__file__))
@@ -15,7 +13,7 @@ UPLOADS_DIR = os.path.join(BASE_DIR, 'uploads')
 PUBLIC_DIR  = os.path.join(BASE_DIR, 'public')
 JWT_SECRET  = os.environ.get('JWT_SECRET', 'veilfile_secret_python_2025')
 JWT_DAYS    = 7
-PORT        = int(os.environ.get('PORT', 3001))
+PORT        = int(os.environ.get('PORT', 5000))
 MAX_MB      = 50
 
 os.makedirs(os.path.join(BASE_DIR, 'data'), exist_ok=True)
@@ -193,6 +191,97 @@ def change_password():
     user['password'] = bcrypt.hashpw(new_pw.encode(), bcrypt.gensalt()).decode()
     save_db(db)
     return jsonify({'message': 'Password berhasil diperbarui.'})
+
+# ── NEW: Ganti Akun (username + email) ───────────
+@app.route('/api/profile/account', methods=['PUT'])
+@auth_required
+def update_account():
+    """
+    Ganti username dan/atau email akun.
+    Membutuhkan konfirmasi password.
+    """
+    body         = request.get_json() or {}
+    new_username = (body.get('username') or '').strip()
+    new_email    = (body.get('email') or '').strip()
+    password     = body.get('password') or ''
+
+    if not password:
+        return jsonify({'error': 'Konfirmasi password diperlukan.'}), 400
+    if not new_username and not new_email:
+        return jsonify({'error': 'Isi minimal satu kolom (username atau email).'}), 400
+
+    db   = load_db()
+    user = next((u for u in db['users'] if u['id'] == request.user_id), None)
+    if not user:
+        return jsonify({'error': 'User tidak ditemukan.'}), 404
+
+    if not bcrypt.checkpw(password.encode(), user['password'].encode()):
+        return jsonify({'error': 'Password tidak sesuai.'}), 401
+
+    if new_username and new_username.lower() != user['username'].lower():
+        if any(u['username'].lower() == new_username.lower() for u in db['users'] if u['id'] != request.user_id):
+            return jsonify({'error': 'Username sudah digunakan oleh akun lain.'}), 409
+        user['username'] = new_username
+        # update profile displayName if it was still the same as username
+        for p in db['profiles']:
+            if p['userId'] == request.user_id and p.get('displayName') == request.username:
+                p['displayName'] = new_username
+
+    if new_email:
+        if not re.match(r'^[^@]+@[^@]+\.[^@]+$', new_email):
+            return jsonify({'error': 'Format email tidak valid.'}), 400
+        if new_email.lower() != user['email'].lower():
+            if any(u['email'].lower() == new_email.lower() for u in db['users'] if u['id'] != request.user_id):
+                return jsonify({'error': 'Email sudah digunakan oleh akun lain.'}), 409
+            user['email'] = new_email
+
+    save_db(db)
+
+    # Issue a new token with possibly updated username
+    new_token = make_token(user['id'], user['username'])
+    profile   = next((p for p in db['profiles'] if p['userId'] == request.user_id), {})
+    return jsonify({
+        'message': 'Akun berhasil diperbarui.',
+        'token':   new_token,
+        'user': {'id': user['id'], 'username': user['username'], 'email': user['email'], 'createdAt': user['createdAt'], 'profile': profile}
+    })
+
+# ── NEW: Hapus Akun ───────────────────────────────
+@app.route('/api/profile/account', methods=['DELETE'])
+@auth_required
+def delete_account():
+    """
+    Hapus akun beserta semua file dan folder milik user.
+    Membutuhkan konfirmasi password.
+    """
+    body     = request.get_json() or {}
+    password = body.get('password') or ''
+
+    if not password:
+        return jsonify({'error': 'Konfirmasi password diperlukan.'}), 400
+
+    db   = load_db()
+    user = next((u for u in db['users'] if u['id'] == request.user_id), None)
+    if not user:
+        return jsonify({'error': 'User tidak ditemukan.'}), 404
+
+    if not bcrypt.checkpw(password.encode(), user['password'].encode()):
+        return jsonify({'error': 'Password tidak sesuai.'}), 401
+
+    # Hapus semua file fisik
+    user_dir = os.path.join(UPLOADS_DIR, request.user_id)
+    if os.path.exists(user_dir):
+        import shutil
+        shutil.rmtree(user_dir, ignore_errors=True)
+
+    # Hapus dari database
+    db['users']    = [u for u in db['users']    if u['id']     != request.user_id]
+    db['profiles'] = [p for p in db['profiles'] if p['userId'] != request.user_id]
+    db['files']    = [f for f in db['files']    if f['userId'] != request.user_id]
+    db['folders']  = [f for f in db['folders']  if f['userId'] != request.user_id]
+    save_db(db)
+
+    return jsonify({'message': 'Akun berhasil dihapus.'})
 
 # ══════════════════════════════════════════════════
 #  FOLDERS
@@ -387,7 +476,15 @@ def remove_bg(file_id):
         with open(src_path, 'rb') as f:
             input_data = f.read()
 
-        output_data = remove(input_data)
+        response = requests.post(
+            'https://api.remove.bg/v1.0/removebg',
+            files={'image_file': ('image', input_data)},
+            data={'size': 'auto'},
+            headers={'X-Api-Key': 'gf4xMfqSYL4aD9JCiR7WeqZP'},
+        )
+        if response.status_code != 200:
+            raise Exception(response.json().get('errors', [{}])[0].get('title', 'Remove.bg error'))
+        output_data = response.content
 
         base_name   = os.path.splitext(file['originalName'])[0]
         new_orig    = base_name + '_no-bg.png'
