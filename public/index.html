@@ -1859,34 +1859,39 @@ function clearScanImage() {
 
 async function doGoogleLensScan() {
   if (!scanImageFile) return;
+  
   const btn = document.getElementById('btn-scan');
+  const originalText = btn.innerHTML;
   btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyiapkan…';
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengupload...';
 
   try {
     const token = localStorage.getItem(TOKEN_KEY);
     const form = new FormData();
     form.append('image', scanImageFile);
 
-    // Upload ke server Railway dulu
     const res = await fetch('/api/scan/upload', {
       method: 'POST',
       headers: { Authorization: 'Bearer ' + token },
       body: form
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error);
 
-    // Kirim URL publik ke Google Lens
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || 'Gagal upload gambar');
+    }
+
     const lensUrl = `https://lens.google.com/uploadbyurl?url=${encodeURIComponent(data.url)}`;
     window.open(lensUrl, '_blank');
-    showToast('Membuka Google Lens…', 'success');
+    showToast('Membuka Google Lens...', 'success');
 
-  } catch(err) {
+  } catch (err) {
+    console.error(err);
     showToast('Gagal: ' + err.message, 'error');
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Cari Kemiripan di Google Lens';
+    btn.innerHTML = originalText;
   }
 }
 /* ── THEME TOGGLE ── */
