@@ -523,6 +523,21 @@ body{font-family:'Poppins',sans-serif;min-height:100vh;color:var(--text-primary)
   .scanner-card { padding: 32px 20px; }
   .scan-tips { grid-template-columns: 1fr; }
 }
+/* ── LIGHT MODE ── */
+.btn-theme{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:var(--text-primary);border-radius:10px;padding:8px 12px;cursor:pointer;font-size:14px;transition:var(--transition)}
+.btn-theme:hover{background:rgba(255,255,255,0.15)}
+
+body.light-mode{background:#f0f2f8}
+body.light-mode #page-dashboard{background:#f0f2f8}
+body.light-mode .topbar{background:rgba(255,255,255,0.9);border-bottom:1px solid rgba(0,0,0,0.08)}
+body.light-mode .stat-card{background:rgba(255,255,255,0.9);border-color:rgba(0,0,0,0.08)}
+body.light-mode .file-card{background:rgba(255,255,255,0.9);border-color:rgba(0,0,0,0.08)}
+body.light-mode .folder-card{background:rgba(255,255,255,0.9);border-color:rgba(0,0,0,0.08)}
+body.light-mode .search-input{background:rgba(255,255,255,0.9);border-color:rgba(0,0,0,0.12);color:#1a1a2e}
+body.light-mode .upload-zone{background:rgba(255,255,255,0.7);border-color:rgba(167,139,250,0.4)}
+body.light-mode .modal-box{background:rgba(255,255,255,0.97)}
+body.light-mode{--text-primary:#1a1a2e;--text-secondary:rgba(26,26,46,0.6)}
+body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0.85),rgba(230,235,250,0.85))}
 </style>
 </head>
 <body>
@@ -852,6 +867,9 @@ body{font-family:'Poppins',sans-serif;min-height:100vh;color:var(--text-primary)
         <div class="user-avatar" id="scan-avatar">A</div>
         <span class="user-name" id="scan-username">User</span>
       </div>
+      <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" title="Ganti tema">
+        <i class="fas fa-sun" id="theme-icon"></i>
+      </button>
       <button class="btn-logout" onclick="doLogout()">
         <i class="fas fa-arrow-right-from-bracket"></i> Keluar
       </button>
@@ -1763,6 +1781,25 @@ async function doGoogleLensScan() {
     btn.innerHTML = '<i class="fas fa-magnifying-glass"></i> Cari Kemiripan di Google Lens';
   }
 }
+/* ── THEME TOGGLE ── */
+function toggleTheme(){
+  const isLight = document.body.classList.toggle('light-mode');
+  const icon = document.getElementById('theme-icon');
+  icon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+  localStorage.setItem('veilfile_theme', isLight ? 'light' : 'dark');
+}
+
+// Load theme saat startup
+(function(){
+  const saved = localStorage.getItem('veilfile_theme');
+  if(saved === 'light'){
+    document.body.classList.add('light-mode');
+    setTimeout(()=>{
+      const icon = document.getElementById('theme-icon');
+      if(icon) icon.className = 'fas fa-moon';
+    }, 100);
+  }
+})();
 
 </script>
 </body>
