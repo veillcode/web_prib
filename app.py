@@ -590,15 +590,6 @@ def empty_trash():
     save_db(db)
     return jsonify({'message': f'{len(trash)} file dihapus permanen.'})
  
-    path = os.path.join(UPLOADS_DIR, f.get('storedName', ''))
-    if os.path.exists(path):
-        os.remove(path)
- 
-    db['files'] = [x for x in db['files'] if x['id'] != file_id]
-    save_db(db)
-    return jsonify({'message': 'File berhasil dihapus.'})
- 
- 
 @app.route('/api/files/<file_id>/download', methods=['GET'])
 @auth_required
 def download_file(file_id):
