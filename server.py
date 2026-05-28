@@ -555,17 +555,82 @@ def update_file(file_id):
 def delete_file(file_id):
     db   = load_db()
     file = next((f for f in db['files']
-                 if f['id'] == file_id and f['userId'] == request.user_id), None)
+                 if f['id'] == file_id and f['userId'] == request.user_id
+                 and not f.get('deletedAt')), None)
     if not file:
         return jsonify({'error': 'File tidak ditemukan.'}), 404
 
-    path = os.path.join(UPLOADS_DIR, request.user_id, file['storedName'])
+    # Soft-delete: tandai deletedAt, file fisik tetap ada
+    file['deletedAt'] = datetime.now(timezone.utc).isoformat()
+    save_db(db)
+    return jsonify({'message': 'File dipindah ke trash.'})
+
+
+@app.route('/api/trash', methods=['GET'])
+@auth_required
+def get_trash():
+    db    = load_db()
+    files = [f for f in db['files']
+             if f['userId'] == request.user_id and f.get('deletedAt')]
+    files.sort(key=lambda x: x.get('deletedAt', ''), reverse=True)
+    return jsonify({'files': files})
+
+
+@app.route('/api/trash/<file_id>/restore', methods=['POST'])
+@auth_required
+def restore_file(file_id):
+    db = load_db()
+    f  = next((x for x in db['files']
+               if x['id'] == file_id and x['userId'] == request.user_id
+               and x.get('deletedAt')), None)
+    if not f:
+        return jsonify({'error': 'File tidak ditemukan di trash.'}), 404
+
+    # Kalau folder sudah dihapus, pindah ke root
+    if f.get('folderId'):
+        folder_exists = any(fo['id'] == f['folderId'] and fo['userId'] == request.user_id
+                            for fo in db['folders'])
+        if not folder_exists:
+            f['folderId'] = None
+
+    del f['deletedAt']
+    save_db(db)
+    return jsonify({'message': 'File berhasil direstore.', 'file': f})
+
+
+@app.route('/api/trash/<file_id>', methods=['DELETE'])
+@auth_required
+def delete_permanent(file_id):
+    db = load_db()
+    f  = next((x for x in db['files']
+               if x['id'] == file_id and x['userId'] == request.user_id
+               and x.get('deletedAt')), None)
+    if not f:
+        return jsonify({'error': 'File tidak ditemukan di trash.'}), 404
+
+    path = os.path.join(UPLOADS_DIR, request.user_id, f.get('storedName', ''))
     if os.path.exists(path):
         os.remove(path)
 
-    db['files'] = [f for f in db['files'] if f['id'] != file_id]
+    db['files'] = [x for x in db['files'] if x['id'] != file_id]
     save_db(db)
-    return jsonify({'message': 'File berhasil dihapus.'})
+    return jsonify({'message': 'File dihapus permanen.'})
+
+
+@app.route('/api/trash', methods=['DELETE'])
+@auth_required
+def empty_trash():
+    db    = load_db()
+    trash = [f for f in db['files']
+             if f['userId'] == request.user_id and f.get('deletedAt')]
+    for f in trash:
+        path = os.path.join(UPLOADS_DIR, request.user_id, f.get('storedName', ''))
+        if os.path.exists(path):
+            os.remove(path)
+    db['files'] = [f for f in db['files']
+                   if not (f['userId'] == request.user_id and f.get('deletedAt'))]
+    save_db(db)
+    return jsonify({'message': f'{len(trash)} file dihapus permanen.'})
 
 
 # ── FIX: as_attachment=False agar file bisa dipreview di viewer ──────────────

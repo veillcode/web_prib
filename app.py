@@ -527,7 +527,7 @@ def delete_file(file_id):
 def get_trash():
     db    = load_db()
     files = [f for f in db['files']
-             if f['userId'] == request.user_id and f.get('deletedAt')]
+             if f['userId'] == request.user_id and not f.get('deletedAt')]
     files.sort(key=lambda x: x.get('deletedAt', ''), reverse=True)
     return jsonify({'files': files})
 

@@ -1588,8 +1588,15 @@ async function moveFile(folderId){
 async function deleteFile(id,btn){
   btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';btn.disabled=true;
   const{ok}=await apiFetch(`/api/files/${id}`,{method:'DELETE'});
-  if(ok){currentFiles=currentFiles.filter(f=>f.id!==id);renderAll();await loadAll();showToast('File berhasil dihapus.','success');}
-  else{btn.innerHTML='<i class="fas fa-trash"></i>';btn.disabled=false;showToast('Gagal menghapus file.','error');}
+  if(ok){
+    currentFiles=currentFiles.filter(f=>f.id!==id);
+    renderAll();      // renderAll() sudah include renderPins() — pin auto-hilang
+    await loadAll();  // sync stats + trash badge
+    showToast('File dipindah ke trash.','success');
+  } else {
+    btn.innerHTML='<i class="fas fa-trash"></i>';btn.disabled=false;
+    showToast('Gagal menghapus file.','error');
+  }
 }
  
 /* ── DOWNLOAD ────────────────────────────────────── */
