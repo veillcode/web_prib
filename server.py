@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
-import json, os, uuid, bcrypt, jwt, re, base64
+import json, os, uuid, bcrypt, jwt, re, base64, mimetypes
 from datetime import datetime, timedelta, timezone
 from functools import wraps
 from werkzeug.utils import secure_filename
@@ -10,7 +10,7 @@ import requests
 BASE_DIR    = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE   = os.path.join(BASE_DIR, 'data', 'db.json')
 UPLOADS_DIR = os.path.join(BASE_DIR, 'uploads')
-AVATARS_DIR = os.path.join(BASE_DIR, 'avatars')   # ← BARU: folder foto profil
+AVATARS_DIR = os.path.join(BASE_DIR, 'avatars')
 PUBLIC_DIR  = os.path.join(BASE_DIR, 'public')
 JWT_SECRET  = os.environ.get('JWT_SECRET', 'veilfile_secret_python_2025')
 JWT_DAYS    = 7
@@ -19,7 +19,7 @@ MAX_MB      = 50
 
 os.makedirs(os.path.join(BASE_DIR, 'data'), exist_ok=True)
 os.makedirs(UPLOADS_DIR, exist_ok=True)
-os.makedirs(AVATARS_DIR, exist_ok=True)   # ← BARU
+os.makedirs(AVATARS_DIR, exist_ok=True)
 
 ALLOWED_AVATAR_EXT = {'.jpg', '.jpeg', '.png', '.webp', '.gif'}
 MAX_AVATAR_MB      = 5
@@ -110,7 +110,7 @@ def register():
     db['profiles'].append({
         'userId': user_id, 'displayName': username, 'bio': '',
         'avatarColor': random.choice(COLORS),
-        'avatarFile': None,    # ← BARU: path foto profil
+        'avatarFile': None,
         'createdAt': now, 'updatedAt': now
     })
     save_db(db)
@@ -205,14 +205,9 @@ def update_profile():
     return jsonify({'error': 'Profil tidak ditemukan.'}), 404
 
 
-# ── BARU: Upload Foto Profil ──────────────────────
 @app.route('/api/profile/avatar', methods=['POST'])
 @auth_required
 def upload_avatar():
-    """
-    Upload foto profil. Terima multipart/form-data dengan field 'avatar'.
-    Maks 5MB, format JPG/PNG/WEBP/GIF.
-    """
     if 'avatar' not in request.files:
         return jsonify({'error': 'Tidak ada file avatar yang dikirim.'}), 400
 
@@ -224,7 +219,6 @@ def upload_avatar():
     if ext not in ALLOWED_AVATAR_EXT:
         return jsonify({'error': 'Format tidak didukung. Gunakan JPG, PNG, WEBP, atau GIF.'}), 400
 
-    # Cek ukuran file
     file.seek(0, 2)
     size = file.tell()
     file.seek(0)
@@ -243,7 +237,6 @@ def upload_avatar():
         if os.path.exists(old_path):
             os.remove(old_path)
 
-    # Simpan avatar baru
     unique_name = uuid.uuid4().hex + ext
     save_path   = os.path.join(AVATARS_DIR, unique_name)
     file.save(save_path)
@@ -259,13 +252,8 @@ def upload_avatar():
     })
 
 
-# ── BARU: Ambil Foto Profil ───────────────────────
 @app.route('/api/profile/avatar/<user_id>', methods=['GET'])
 def get_avatar(user_id):
-    """
-    Endpoint publik untuk mengambil foto profil user.
-    Tidak perlu auth — hanya untuk ditampilkan di <img>.
-    """
     db      = load_db()
     profile = next((p for p in db['profiles'] if p['userId'] == user_id), None)
     if not profile or not profile.get('avatarFile'):
@@ -278,13 +266,25 @@ def get_avatar(user_id):
     return send_file(path)
 
 
-# ── BARU: Hapus Foto Profil ───────────────────────
+# ── FIX: delete_avatar yang sebelumnya hanya berisi `...` ────────────────────
 @app.route('/api/profile/avatar', methods=['DELETE'])
 @auth_required
 def delete_avatar():
-    ...
+    db      = load_db()
+    profile = next((p for p in db['profiles'] if p['userId'] == request.user_id), None)
+    if not profile:
+        return jsonify({'error': 'Profil tidak ditemukan.'}), 404
+
+    avatar_file = profile.get('avatarFile')
+    if avatar_file:
+        avatar_path = os.path.join(AVATARS_DIR, avatar_file)
+        if os.path.exists(avatar_path):
+            os.remove(avatar_path)
+        profile['avatarFile'] = None
+        profile['updatedAt']  = datetime.now(timezone.utc).isoformat()
+        save_db(db)
+
     return jsonify({'message': 'Avatar berhasil dihapus.'})
-    return jsonify({'error': 'Profil tidak ditemukan.'}), 404
 
 
 @app.route('/api/profile/password', methods=['PUT'])
@@ -299,6 +299,8 @@ def change_password():
         return jsonify({'error': 'Password baru minimal 6 karakter.'}), 400
     db   = load_db()
     user = next((u for u in db['users'] if u['id'] == request.user_id), None)
+    if not user:
+        return jsonify({'error': 'User tidak ditemukan.'}), 404
     if not bcrypt.checkpw(curr_pw.encode(), user['password'].encode()):
         return jsonify({'error': 'Password saat ini tidak sesuai.'}), 401
     user['password'] = bcrypt.hashpw(new_pw.encode(), bcrypt.gensalt()).decode()
@@ -306,7 +308,6 @@ def change_password():
     return jsonify({'message': 'Password berhasil diperbarui.'})
 
 
-# ── Ganti Username & Email ────────────────────────
 @app.route('/api/profile/account', methods=['PUT'])
 @auth_required
 def update_account():
@@ -359,7 +360,6 @@ def update_account():
     })
 
 
-# ── Hapus Akun ────────────────────────────────────
 @app.route('/api/profile/account', methods=['DELETE'])
 @auth_required
 def delete_account():
@@ -376,7 +376,7 @@ def delete_account():
     if not bcrypt.checkpw(password.encode(), user['password'].encode()):
         return jsonify({'error': 'Password tidak sesuai.'}), 401
 
-    # Hapus semua file upload
+    # Hapus semua file upload milik user
     user_dir = os.path.join(UPLOADS_DIR, request.user_id)
     if os.path.exists(user_dir):
         import shutil
@@ -568,6 +568,7 @@ def delete_file(file_id):
     return jsonify({'message': 'File berhasil dihapus.'})
 
 
+# ── FIX: as_attachment=False agar file bisa dipreview di viewer ──────────────
 @app.route('/api/files/<file_id>/download', methods=['GET'])
 @auth_required
 def download_file(file_id):
@@ -581,10 +582,15 @@ def download_file(file_id):
     if not os.path.exists(path):
         return jsonify({'error': 'File tidak ada di server.'}), 404
 
-    return send_file(path, as_attachment=True, download_name=file['originalName'])
+    mime = mimetypes.guess_type(file['originalName'])[0] or 'application/octet-stream'
+    return send_file(
+        path,
+        mimetype=mime,
+        as_attachment=False,          # ← preview di browser/viewer
+        download_name=file['originalName']
+    )
 
 
-# ── Remove Background (remove.bg API) ────────────
 @app.route('/api/files/<file_id>/remove-bg', methods=['POST'])
 @auth_required
 def remove_bg(file_id):
@@ -602,19 +608,22 @@ def remove_bg(file_id):
     if not os.path.exists(src_path):
         return jsonify({'error': 'File tidak ada di server.'}), 404
 
+    api_key = os.environ.get('REMOVE_BG_API_KEY', '')
+    if not api_key:
+        return jsonify({'error': 'Fitur hapus background belum dikonfigurasi.'}), 503
+
     try:
         with open(src_path, 'rb') as f:
-            input_data = f.read()
-
-        response = requests.post(
-            'https://api.remove.bg/v1.0/removebg',
-            files={'image_file': ('image', input_data)},
-            data={'size': 'auto'},
-            headers={'X-Api-Key': 'gf4xMfqSYL4aD9JCiR7WeqZP'},
-        )
+            response = requests.post(
+                'https://api.remove.bg/v1.0/removebg',
+                files={'image_file': ('image', f)},
+                data={'size': 'auto'},
+                headers={'X-Api-Key': api_key},
+                timeout=60
+            )
         if response.status_code != 200:
-            raise Exception(response.json().get('errors', [{}])[0].get('title', 'Remove.bg error'))
-        output_data = response.content
+            msg = response.json().get('errors', [{}])[0].get('title', 'Remove.bg error')
+            return jsonify({'error': msg}), 502
 
         base_name   = os.path.splitext(file['originalName'])[0]
         new_orig    = base_name + '_no-bg.png'
@@ -623,62 +632,73 @@ def remove_bg(file_id):
         out_path    = os.path.join(user_dir, unique_name)
 
         with open(out_path, 'wb') as f:
-            f.write(output_data)
+            f.write(response.content)
 
-        size      = os.path.getsize(out_path)
-        now       = datetime.now(timezone.utc).isoformat()
         req_body  = request.get_json(silent=True) or {}
         folder_id = req_body.get('folderId') or file.get('folderId')
+        now       = datetime.now(timezone.utc).isoformat()
 
         record = {
             'id':           'file_' + uuid.uuid4().hex[:12],
             'userId':       request.user_id,
             'originalName': new_orig,
             'storedName':   unique_name,
-            'size':         size,
+            'size':         os.path.getsize(out_path),
             'folderId':     folder_id,
             'uploadedAt':   now
         }
         db['files'].append(record)
         save_db(db)
-
         return jsonify({'message': 'Background berhasil dihapus!', 'file': record}), 201
 
+    except requests.exceptions.Timeout:
+        return jsonify({'error': 'Request timeout. Coba lagi.'}), 504
     except Exception as e:
         return jsonify({'error': f'Gagal memproses gambar: {str(e)}'}), 500
 
+
+# ══════════════════════════════════════════════════
+#  SCANNER
+# ══════════════════════════════════════════════════
 @app.route('/api/scan/upload', methods=['POST'])
 @auth_required
 def scan_upload():
     if 'image' not in request.files:
         return jsonify({'error': 'Tidak ada gambar.'}), 400
-    
+
     file = request.files['image']
-    ext = os.path.splitext(file.filename)[1].lower()
+    ext  = os.path.splitext(file.filename)[1].lower()
+    if ext not in ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp']:
+        return jsonify({'error': 'Format tidak didukung.'}), 400
+
     unique_name = uuid.uuid4().hex + ext
-    
-    scan_dir = os.path.join(PUBLIC_DIR, 'scans')
+    scan_dir    = os.path.join(PUBLIC_DIR, 'scans')
     os.makedirs(scan_dir, exist_ok=True)
-    
     path = os.path.join(scan_dir, unique_name)
     file.save(path)
-    
-    import threading
+
+    import threading, time
     def delete_later():
-        import time
         time.sleep(300)
         if os.path.exists(path):
             os.remove(path)
     threading.Thread(target=delete_later, daemon=True).start()
-    
+
     host = request.host_url.rstrip('/')
-    public_url = f"{host}/scans/{unique_name}"
-    return jsonify({'url': public_url})
+    return jsonify({'url': f'{host}/scans/{unique_name}'})
+
+
+@app.route('/scans/<filename>')
+def serve_scan(filename):
+    return send_from_directory(os.path.join(PUBLIC_DIR, 'scans'), filename)
+
+
 # ══════════════════════════════════════════════════
 if __name__ == '__main__':
     print(f'\n🚀 Veilfile Python Backend')
     print(f'🌐 http://localhost:{PORT}')
     print(f'📁 Database : {DATA_FILE}')
     print(f'📂 Uploads  : {UPLOADS_DIR}')
-    print(f'🖼️  Avatars  : {AVATARS_DIR}\n')
+    print(f'🖼️  Avatars  : {AVATARS_DIR}')
+    print(f'🎨 Remove.bg: {"✅ configured" if os.environ.get("REMOVE_BG_API_KEY") else "⚠️  set REMOVE_BG_API_KEY"}\n')
     app.run(host='0.0.0.0', port=PORT, debug=False)
