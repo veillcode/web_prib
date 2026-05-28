@@ -483,6 +483,65 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
   height: 1px;
   background: linear-gradient(90deg, rgba(196,181,253,0.3), transparent);
 }
+/* ── PIN FEATURE ── */
+.pins-section { margin-bottom: 24px; }
+.pins-section-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+}
+.pins-section-header .sec-label-pin {
+  font-size: 10.5px; font-weight: 600; letter-spacing: 1.2px;
+  text-transform: uppercase; color: #fbbf24;
+  display: flex; align-items: center; gap: 8px;
+}
+.pins-section-header .sec-label-pin::before {
+  content: ''; width: 3px; height: 13px;
+  background: #fbbf24; border-radius: 3px;
+}
+.pins-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px;
+}
+.pin-card {
+  background: rgba(251,191,36,0.06);
+  border: 1px solid rgba(251,191,36,0.22);
+  border-left: 3px solid #fbbf24;
+  border-radius: 14px; padding: 13px 12px 11px;
+  position: relative; cursor: pointer;
+  transition: var(--transition); animation: fadeUp .3s ease both;
+}
+.pin-card:hover { background: rgba(251,191,36,0.12); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
+.pin-label-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 2px 8px; border-radius: 20px;
+  background: rgba(251,191,36,0.18); color: #fbbf24;
+  font-size: 10px; font-weight: 700; margin-bottom: 8px;
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pin-filename {
+  font-size: 12px; font-weight: 600; color: var(--text-primary);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;
+}
+.pin-meta { font-size: 11px; color: var(--text-secondary); }
+.btn-unpin {
+  position: absolute; top: 7px; right: 7px;
+  width: 22px; height: 22px; border-radius: 50%;
+  border: 1px solid rgba(252,129,129,0.25);
+  background: rgba(252,129,129,0.08); color: var(--error);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 11px; transition: var(--transition); line-height:1;
+}
+.btn-unpin:hover { background: var(--error); color: #fff; }
+.btn-pin {
+  background: rgba(251,191,36,0.12); color: #fbbf24;
+  border: 1px solid rgba(251,191,36,0.25);
+}
+.btn-pin:hover { background: #fbbf24; color: #000; }
+/* Modal pin */
+#modal-pin .pin-target-info {
+  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px; padding: 10px 12px; margin-bottom: 14px;
+  font-size: 13px; color: var(--text-secondary);
+}
+#modal-pin .pin-target-info span { color: var(--text-primary); font-weight: 600; }
 </style>
 </head>
 <body>
@@ -575,6 +634,16 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
       <div class="stat-card"><div class="stat-icon"><i class="fas fa-cloud-arrow-up"></i></div><div class="stat-value" id="stat-today">0</div><div class="stat-label">Upload Hari Ini</div></div>
       <div class="stat-card"><div class="stat-icon"><i class="fas fa-hard-drive"></i></div><div class="stat-value" id="stat-size">0 KB</div><div class="stat-label">Penyimpanan</div></div>
     </div>
+    <!-- PIN SECTION -->
+  <div class="pins-section" id="pins-section" style="display:none">
+    <div class="pins-section-header">
+      <span class="sec-label-pin">
+        <i class="fas fa-thumbtack" style="font-size:11px"></i> File Disematkan
+        </span>
+      <span class="badge" id="pin-count" style="background:rgba(251,191,36,0.2);color:#fbbf24;border:1px solid rgba(251,191,36,0.3)">0</span>
+      </div>
+    <div class="pins-grid" id="pins-grid"></div>
+  </div>
     <div class="toolbar">
       <div class="search-wrap">
         <i class="fas fa-search"></i>
@@ -1181,6 +1250,7 @@ function renderAll(){
   renderBreadcrumb();
   renderFolders(q);
   renderFiles(q);
+   renderPins();
 }
 function renderBreadcrumb(){
   const bc=document.getElementById('breadcrumb');
@@ -1252,6 +1322,7 @@ function buildFileCard(file,idx){
     </div>
     <div class="file-actions">
       <button class="btn-icon open"     title="Buka"           onclick="openViewer('${file.id}','${file.originalName.replace(/'/g,"\\'")}')"><i class="fas fa-eye"></i></button>
+      <button class="btn-icon btn-pin" title="Sematkan" onclick="openPinModal('${file.id}','${file.originalName.replace(/'/g,"\\'")}')"><i class="fas fa-thumbtack"></i></button>
       ${isImg?`<button class="btn-icon rmbg" title="Hapus Background" onclick="openRmbgModal('${file.id}','${file.originalName.replace(/'/g,"\\'")}')"><i class="fas fa-eraser"></i></button>`:''}
       <button class="btn-icon rename"   title="Ubah nama"      onclick="openRenameFileModal('${file.id}','${file.originalName.replace(/'/g,"\\'")}')"><i class="fas fa-pen"></i></button>
       <button class="btn-icon move"     title="Pindah folder"  onclick="openMoveModal('${file.id}')"><i class="fas fa-folder-open"></i></button>
@@ -2204,6 +2275,111 @@ async function executeBulkMove(folderId) {
   const dest = folderId ? (currentFolders.find(f => f.id === folderId) || {}).name : 'root';
   showToast(`${moved} file dipindah ke ${dest}.`, 'success');
 }
+/* ── PIN FEATURE ── */
+const PINS_KEY = 'veilfile_pins';
+
+function getPins() {
+  try { return JSON.parse(localStorage.getItem(PINS_KEY) || '[]'); } catch { return []; }
+}
+function savePins(pins) {
+  localStorage.setItem(PINS_KEY, JSON.stringify(pins));
+}
+
+let pinningFileId   = null;
+let pinningFileName = null;
+
+function openPinModal(fileId, fileName) {
+  pinningFileId   = fileId;
+  pinningFileName = fileName;
+  const existingPin = getPins().find(p => p.fileId === fileId);
+  document.getElementById('pin-label-input').value = existingPin ? existingPin.label : '';
+  document.getElementById('pin-target-name').textContent = fileName;
+  openModal('modal-pin');
+  setTimeout(() => document.getElementById('pin-label-input').focus(), 150);
+}
+
+function submitPin() {
+  const label = document.getElementById('pin-label-input').value.trim();
+  if (!label) { showMsg('pin-msg', 'error', 'circle-exclamation', 'Nama pin tidak boleh kosong.'); return; }
+  const pins = getPins().filter(p => p.fileId !== pinningFileId);
+  pins.unshift({ fileId: pinningFileId, fileName: pinningFileName, label, pinnedAt: Date.now() });
+  savePins(pins);
+  closeModal('modal-pin');
+  renderPins();
+  showToast(`File disematkan sebagai "${label}"!`, 'success');
+}
+
+function unpinFile(fileId) {
+  const pins = getPins().filter(p => p.fileId !== fileId);
+  savePins(pins);
+  renderPins();
+  showToast('Pin dihapus.', 'success');
+}
+
+function renderPins() {
+  const pins    = getPins();
+  const section = document.getElementById('pins-section');
+  const grid    = document.getElementById('pins-grid');
+  const countEl = document.getElementById('pin-count');
+
+  // Filter pins: only show files that still exist in currentFiles
+  const validPins = pins.filter(p => currentFiles.some(f => f.id === p.fileId));
+  if (validPins.length !== pins.length) savePins(validPins);
+
+  countEl.textContent = validPins.length;
+  section.style.display = validPins.length === 0 ? 'none' : '';
+
+  grid.innerHTML = '';
+  validPins.forEach((pin, i) => {
+    const file = currentFiles.find(f => f.id === pin.fileId);
+    if (!file) return;
+    const { icon, type } = getFileType(file.originalName || '');
+    const card = document.createElement('div');
+    card.className = 'pin-card';
+    card.style.animationDelay = (i * .05) + 's';
+    card.innerHTML = `
+      <button class="btn-unpin" title="Lepas pin" onclick="event.stopPropagation();unpinFile('${pin.fileId}')">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="pin-label-badge">
+        <i class="fas fa-thumbtack" style="font-size:9px"></i>
+        ${pin.label}
+      </div>
+      <div class="pin-filename">
+        <i class="fas ${icon}" style="margin-right:4px;font-size:12px"></i>${file.originalName}
+      </div>
+      <div class="pin-meta">${formatSize(file.size)} · ${new Date(file.uploadedAt).toLocaleDateString('id-ID',{day:'2-digit',month:'short'})}</div>`;
+    card.addEventListener('click', () => openViewer(pin.fileId, file.originalName));
+    grid.appendChild(card);
+  });
+}
 </script>
+<!-- PIN MODAL -->
+<div class="modal-overlay small-modal" id="modal-pin">
+  <div class="modal-box" style="max-width:360px;padding:28px">
+    <div class="modal-header">
+      <h3><i class="fas fa-thumbtack" style="color:#fbbf24;margin-right:8px"></i>Sematkan File</h3>
+      <button class="modal-close" onclick="closeModal('modal-pin')"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="pin-msg" class="msg-box"></div>
+    <div class="pin-target-info" id="pin-target-info">
+      <i class="fas fa-file" style="margin-right:6px;color:#fbbf24"></i>
+      <span id="pin-target-name">-</span>
+    </div>
+    <div class="field-group">
+      <label>Nama Pin (Label)</label>
+      <div class="input-wrap">
+        <input type="text" id="pin-label-input" placeholder="cth: Tugas Penting, Referensi…" maxlength="40">
+        <i class="fas fa-tag input-icon"></i>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--text-secondary);margin-bottom:14px;margin-top:-8px">
+      Label ini tampil di atas kartu pin kamu
+    </p>
+    <button class="btn-primary" onclick="submitPin()">
+      <i class="fas fa-thumbtack" style="margin-right:8px"></i>Sematkan File
+    </button>
+  </div>
+</div>
 </body>
 </html>
