@@ -2313,6 +2313,7 @@ function renderPins() {
 
     const card = document.createElement('div');
     card.className = 'pin-card';
+    card.dataset.fileId = pin.fileId;
     card.style.animationDelay = (i * .05) + 's';
 
     // Tombol unpin — dibuat terpisah, event listener eksplisit
@@ -2320,10 +2321,11 @@ function renderPins() {
     unpinBtn.className = 'btn-unpin';
     unpinBtn.title = 'Lepas pin';
     unpinBtn.innerHTML = '<i class="fas fa-times"></i>';
-    unpinBtn.addEventListener('click', e => {
+    unpinBtn.addEventListener('click', function(e) {
       e.stopPropagation();
       e.preventDefault();
-      unpinFile(pin.fileId);
+      const fid = this.closest('.pin-card').dataset.fileId;
+      unpinFile(fid);
     });
 
     const labelBadge = document.createElement('div');
