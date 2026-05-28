@@ -574,6 +574,114 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     grid-template-columns:1fr !important;
   }
 }
+/* ── MULTI-SELECT ── */
+.select-mode-bar {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: rgba(167,139,250,0.1);
+  border: 1px solid rgba(167,139,250,0.3);
+  border-radius: 14px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  animation: fadeUp .25s ease both;
+}
+.select-mode-bar.show { display: flex; }
+.select-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  flex: 1;
+  min-width: 80px;
+}
+.btn-bulk {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+.btn-bulk.move {
+  background: rgba(251,191,36,0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(251,191,36,0.25);
+}
+.btn-bulk.move:hover { background: #fbbf24; color: #000; }
+.btn-bulk.delete {
+  background: rgba(252,129,129,0.12);
+  color: var(--error);
+  border: 1px solid rgba(252,129,129,0.25);
+}
+.btn-bulk.delete:hover { background: var(--error); color: #fff; }
+.btn-bulk.cancel {
+  background: rgba(255,255,255,0.07);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.btn-bulk.cancel:hover { background: rgba(255,255,255,0.14); color: var(--text-primary); }
+.btn-bulk.select-all {
+  background: rgba(96,165,250,0.1);
+  color: var(--accent2);
+  border: 1px solid rgba(96,165,250,0.22);
+}
+.btn-bulk.select-all:hover { background: var(--accent2); color: #fff; }
+
+/* Checkbox overlay pada file-card */
+.file-card .fc-checkbox {
+  display: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.06);
+  flex-shrink: 0;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+  position: relative;
+  z-index: 2;
+}
+.select-mode .file-card .fc-checkbox { display: flex; }
+.select-mode .file-card .file-actions { display: none; }
+.file-card.selected .fc-checkbox {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.file-card.selected .fc-checkbox::after {
+  content: '';
+  width: 5px;
+  height: 9px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(40deg) translate(-1px, -1px);
+  display: block;
+}
+.file-card.selected {
+  background: rgba(167,139,250,0.1);
+  border-color: rgba(167,139,250,0.4);
+}
+.select-mode .file-card { cursor: pointer; }
+
+/* Tombol aktifkan select mode di toolbar */
+.btn-select-mode {
+  background: rgba(167,139,250,0.1);
+  color: var(--accent);
+  border: 1px solid rgba(167,139,250,0.22);
+}
+.btn-select-mode:hover { background: var(--accent); color: #fff; }
+.btn-select-mode.active {
+  background: var(--accent);
+  color: #fff;
+}
 </style>
 </head>
 <body>
@@ -671,6 +779,9 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
         <i class="fas fa-search"></i>
         <input class="search-input" id="search-input" type="text" placeholder="Cari nama file…" oninput="onSearch()">
       </div>
+      <button class="btn-toolbar btn-select-mode" id="btn-select-mode" onclick="toggleSelectMode()">
+        <i class="fas fa-check-square"></i> Pilih File
+      </button>
         <button class="btn-toolbar" onclick="goToStats()" style="background:rgba(96,165,250,0.12);color:var(--accent2);border:1px solid rgba(96,165,250,0.25)">
           <i class="fas fa-chart-line"></i> Statistik
         </button>
@@ -679,6 +790,22 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
         </button>
       <button class="btn-toolbar btn-new-folder" onclick="openNewFolderModal()">
         <i class="fas fa-folder-plus"></i> Folder Baru
+      </button>
+    </div>
+    <!-- Bulk action bar -->
+    <div class="select-mode-bar" id="select-mode-bar">
+      <span class="select-count" id="select-count">0 file dipilih</span>
+      <button class="btn-bulk select-all" onclick="selectAllFiles()">
+        <i class="fas fa-check-double"></i> Pilih Semua
+      </button>
+      <button class="btn-bulk move" onclick="openBulkMoveModal()">
+        <i class="fas fa-folder-open"></i> Pindahkan
+      </button>
+      <button class="btn-bulk delete" onclick="bulkDeleteFiles()">
+        <i class="fas fa-trash"></i> Hapus
+      </button>
+      <button class="btn-bulk cancel" onclick="exitSelectMode()">
+        <i class="fas fa-times"></i> Batal
       </button>
     </div>
     <div class="breadcrumb" id="breadcrumb">
@@ -1272,10 +1399,14 @@ function buildFileCard(file,idx){
   const isImg=['jpg','jpeg','png','webp','bmp'].includes(getExt(file.originalName||''));
   const card=document.createElement('div');
   card.className='file-card';
+  card.dataset.id=file.id;
   card.style.animationDelay=(idx*.04)+'s';
+  card.addEventListener('click', e => {
+    if (selectMode && !e.target.closest('button')) toggleFileSelect(file.id, card);
+  });
   card.innerHTML=`
+    <div class="fc-checkbox" onclick="event.stopPropagation();toggleFileSelect('${file.id}',this.closest('.file-card'))"></div>
     <div class="file-icon-wrap ${type}"><i class="fas ${icon}"></i></div>
-    <div class="file-info">
       <div class="file-name" title="${file.originalName}">${file.originalName}</div>
       <div class="file-meta">
         <span class="file-type-badge">${label}</span>
@@ -2134,6 +2265,145 @@ function renderStats() {
       el.style.width = el.dataset.pct+'%';
     });
   },100);
+}
+/* ══════════════════════════════════════════════
+   MULTI-SELECT
+══════════════════════════════════════════════ */
+let selectMode    = false;
+let selectedFiles = new Set();   // kumpulan file id
+
+function toggleSelectMode() {
+  if (selectMode) { exitSelectMode(); return; }
+  selectMode = true;
+  selectedFiles.clear();
+  document.getElementById('file-list').classList.add('select-mode');
+  document.getElementById('select-mode-bar').classList.add('show');
+  document.getElementById('btn-select-mode').classList.add('active');
+  updateSelectCount();
+}
+
+function exitSelectMode() {
+  selectMode = false;
+  selectedFiles.clear();
+  document.getElementById('file-list').classList.remove('select-mode');
+  document.getElementById('select-mode-bar').classList.remove('show');
+  document.getElementById('btn-select-mode').classList.remove('active');
+  // Hapus class selected dari semua card
+  document.querySelectorAll('.file-card.selected').forEach(c => c.classList.remove('selected'));
+}
+
+function updateSelectCount() {
+  const n = selectedFiles.size;
+  document.getElementById('select-count').textContent =
+    n === 0 ? 'Belum ada file dipilih' : `${n} file dipilih`;
+}
+
+function toggleFileSelect(fileId, cardEl) {
+  if (!selectMode) return;
+  if (selectedFiles.has(fileId)) {
+    selectedFiles.delete(fileId);
+    cardEl.classList.remove('selected');
+  } else {
+    selectedFiles.add(fileId);
+    cardEl.classList.add('selected');
+  }
+  updateSelectCount();
+}
+
+function selectAllFiles() {
+  // Hanya file yang sedang ditampilkan (setelah filter folder/search)
+  const q = (document.getElementById('search-input').value || '').toLowerCase().trim();
+  let visible = currentFiles.filter(f => f.folderId === (activeFolderId || null));
+  if (q) visible = currentFiles.filter(f => (f.originalName || '').toLowerCase().includes(q));
+
+  const allSelected = visible.every(f => selectedFiles.has(f.id));
+  if (allSelected) {
+    // Deselect all
+    visible.forEach(f => {
+      selectedFiles.delete(f.id);
+      const card = document.querySelector(`.file-card[data-id="${f.id}"]`);
+      if (card) card.classList.remove('selected');
+    });
+  } else {
+    // Select all
+    visible.forEach(f => {
+      selectedFiles.add(f.id);
+      const card = document.querySelector(`.file-card[data-id="${f.id}"]`);
+      if (card) card.classList.add('selected');
+    });
+  }
+  updateSelectCount();
+}
+
+/* ── Bulk Delete ─────────────────────────────── */
+async function bulkDeleteFiles() {
+  if (selectedFiles.size === 0) { showToast('Belum ada file yang dipilih.', 'error'); return; }
+  const n = selectedFiles.size;
+  if (!confirm(`Hapus ${n} file sekaligus? Tindakan ini tidak bisa dibatalkan.`)) return;
+
+  const ids = [...selectedFiles];
+  let deleted = 0;
+  const db_ref = load_db_local(); // gunakan currentFiles
+
+  for (const id of ids) {
+    const { ok } = await apiFetch(`/api/files/${id}`, { method: 'DELETE' });
+    if (ok) {
+      currentFiles = currentFiles.filter(f => f.id !== id);
+      deleted++;
+    }
+  }
+
+  exitSelectMode();
+  renderAll();
+  await loadAll();
+  showToast(`${deleted} file berhasil dihapus.`, 'success');
+}
+
+/* ── Bulk Move ───────────────────────────────── */
+function openBulkMoveModal() {
+  if (selectedFiles.size === 0) { showToast('Belum ada file yang dipilih.', 'error'); return; }
+  document.getElementById('bulk-move-hint').textContent = `Memindahkan ${selectedFiles.size} file`;
+  const list = document.getElementById('bulk-move-folder-list');
+  list.innerHTML = '';
+
+  const rootBtn = document.createElement('button');
+  rootBtn.className = 'btn-primary';
+  rootBtn.style.cssText = 'margin-bottom:4px;background:rgba(255,255,255,0.08);box-shadow:none;border:1px solid rgba(255,255,255,0.12)';
+  rootBtn.innerHTML = '<i class="fas fa-house" style="margin-right:8px"></i>Root (Tanpa Folder)';
+  rootBtn.onclick = () => executeBulkMove(null);
+  list.appendChild(rootBtn);
+
+  currentFolders.forEach(folder => {
+    const btn = document.createElement('button');
+    btn.className = 'btn-primary';
+    btn.style.cssText = 'margin-bottom:4px;background:rgba(251,191,36,0.12);box-shadow:none;border:1px solid rgba(251,191,36,0.2)';
+    btn.innerHTML = `<i class="fas fa-folder" style="margin-right:8px;color:#fbbf24"></i>${folder.name}`;
+    btn.onclick = () => executeBulkMove(folder.id);
+    list.appendChild(btn);
+  });
+
+  if (currentFolders.length === 0) {
+    list.innerHTML += '<p style="color:var(--text-secondary);font-size:13px;text-align:center;padding:12px">Belum ada folder.</p>';
+  }
+  openModal('modal-bulk-move');
+}
+
+async function executeBulkMove(folderId) {
+  const ids = [...selectedFiles];
+  let moved = 0;
+  for (const id of ids) {
+    const { ok } = await apiFetch(`/api/files/${id}`, { method: 'PUT', body: { folderId } });
+    if (ok) {
+      const idx = currentFiles.findIndex(f => f.id === id);
+      if (idx > -1) currentFiles[idx].folderId = folderId;
+      moved++;
+    }
+  }
+  closeModal('modal-bulk-move');
+  exitSelectMode();
+  renderAll();
+  const dest = folderId ? (currentFolders.find(f => f.id === folderId) || {}).name : 'root';
+  showToast(`${moved} file dipindah ke ${dest}.`, 'success');
 }
 </script>
 </body>
