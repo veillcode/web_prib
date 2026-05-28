@@ -1585,16 +1585,19 @@ async function moveFile(folderId){
 }
  
 /* ── FILE DELETE ─────────────────────────────────── */
-async function deleteFile(id,btn){
-  btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';btn.disabled=true;
+async function deleteFile(id, btn){
+  btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';
+  btn.disabled=true;
   const{ok}=await apiFetch(`/api/files/${id}`,{method:'DELETE'});
   if(ok){
+    // Filter lokal DULU sebelum renderAll, biar tidak duplikat
     currentFiles=currentFiles.filter(f=>f.id!==id);
-    renderAll();      // renderAll() sudah include renderPins() — pin auto-hilang
-    await loadAll();  // sync stats + trash badge
+    renderAll();
+    await loadAll(); // sync stats + trash badge
     showToast('File dipindah ke trash.','success');
   } else {
-    btn.innerHTML='<i class="fas fa-trash"></i>';btn.disabled=false;
+    btn.innerHTML='<i class="fas fa-trash"></i>';
+    btn.disabled=false;
     showToast('Gagal menghapus file.','error');
   }
 }
@@ -2616,11 +2619,13 @@ function updateSetPinDots() {
 let unlockFolderId   = null;
 let unlockFolderName = null;
 let unlockCurrent    = '';
+let unlockVerified   = false;
 
 function openUnlockModal(id, name) {
   unlockFolderId   = id;
   unlockFolderName = name;
   unlockCurrent    = '';
+  unlockVerified   = false; 
   document.getElementById('unlock-folder-name').textContent = '📁 ' + name;
   updateUnlockDots();
   clearMsgs();
@@ -2639,6 +2644,7 @@ function onUnlockKey(key) {
     setTimeout(() => {
       const locks = getFolderLocks();
       if (unlockCurrent === locks[unlockFolderId]) {
+        unlockVerified = true; // tandai PIN sudah terverifikasi
         closeModal('modal-unlock-folder');
         openFolder(unlockFolderId);
         showToast('Folder dibuka!', 'success');
@@ -2660,14 +2666,15 @@ function updateUnlockDots() {
 }
 
 function removeFolderLock() {
-  const locks = getFolderLocks();
-  if (unlockCurrent !== locks[unlockFolderId]) {
+  if (!unlockVerified) {
     showMsg('unlock-pin-msg', 'error', 'circle-xmark', 'Masukkan PIN yang benar dulu sebelum menghapus.');
     return;
   }
   if (!confirm(`Hapus PIN folder "${unlockFolderName}"?`)) return;
+  const locks = getFolderLocks();
   delete locks[unlockFolderId];
   saveFolderLocks(locks);
+  unlockVerified = false; // reset flag
   closeModal('modal-unlock-folder');
   renderAll();
   showToast('PIN folder dihapus.', 'success');
