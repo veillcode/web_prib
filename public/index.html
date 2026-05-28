@@ -325,7 +325,7 @@ body.light-mode .folder-card{background:rgba(255,255,255,0.9);border-color:rgba(
 body.light-mode .search-input{background:rgba(255,255,255,0.9);border-color:rgba(0,0,0,0.12);color:#1a1a2e}
 body.light-mode .upload-zone{background:rgba(255,255,255,0.7);border-color:rgba(167,139,250,0.4)}
 body.light-mode .modal-box{background:rgba(255,255,255,0.97)}
-body.light-mode{--text-primary:#1a1a2e;--text-secondary:rgba(26,26,46,0.6)}
+body.light-mode{--text-primary:#111827;--text-secondary:rgba(17,24,39,0.6)}
 body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0.85),rgba(230,235,250,0.85))}
 /* ── STATS PAGE ── */
 #page-stats{flex-direction:column;background:#0d0d1a;min-height:100vh}
@@ -1041,6 +1041,31 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
            ondragover="event.preventDefault();this.classList.add('dragover')"
            ondragleave="this.classList.remove('dragover')">
         <input type="file" id="scan-file-input" accept="image/*" onchange="handleScanFile(this.files[0])">
+        <div style="margin-bottom:16px;opacity:0.85">
+  <svg width="120" height="100" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Frame sudut kiri atas -->
+    <path d="M10 30 L10 10 L30 10" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Frame sudut kanan atas -->
+    <path d="M90 10 L110 10 L110 30" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Frame sudut kiri bawah -->
+    <path d="M10 70 L10 90 L30 90" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Frame sudut kanan bawah -->
+    <path d="M90 90 L110 90 L110 70" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- Garis scan animasi -->
+    <line x1="15" y1="50" x2="105" y2="50" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" opacity="0.8">
+      <animate attributeName="y1" values="20;80;20" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="y2" values="20;80;20" dur="2s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite"/>
+    </line>
+    <!-- Ikon gambar di tengah -->
+    <rect x="42" y="35" width="36" height="30" rx="4" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" fill="rgba(167,139,250,0.08)"/>
+    <circle cx="51" cy="44" r="3" fill="rgba(167,139,250,0.5)"/>
+    <path d="M42 58 L52 48 L60 56 L66 50 L78 58" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <!-- Ikon kaca pembesar -->
+    <circle cx="88" cy="72" r="8" stroke="#f472b6" stroke-width="2" fill="none"/>
+    <line x1="94" y1="78" x2="100" y2="84" stroke="#f472b6" stroke-width="2" stroke-linecap="round"/>
+  </svg>
+</div>
         <div class="scan-drop-icon"><i class="fas fa-image"></i></div>
         <h3>Seret gambar ke sini</h3>
         <p>atau klik untuk memilih gambar dari perangkat kamu</p>
