@@ -2452,7 +2452,7 @@ function openUnlockModal(id, name) {
   unlockFolderId   = id;
   unlockFolderName = name;
   unlockCurrent    = '';
-  unlockVerified   = false;
+  unlockVerified   = false;  // ← pastikan ini ada
   document.getElementById('unlock-folder-name').textContent = '📁 ' + name;
   updateUnlockDots();
   clearMsgs();
@@ -2481,6 +2481,7 @@ function onUnlockKey(key) {
         setTimeout(() => dotsEl.classList.remove('pin-shake'), 400);
         showMsg('unlock-pin-msg', 'error', 'circle-xmark', 'PIN salah. Coba lagi.');
         unlockCurrent = '';
+        unlockVerified = false;
         updateUnlockDots();
       }
     }, 120);
