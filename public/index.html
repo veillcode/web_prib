@@ -623,6 +623,41 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
   60%{transform:translateX(-6px)}
   80%{transform:translateX(6px)}
 }
+/* ── TRASH ── */
+.trash-badge {
+  position: relative;
+}
+.trash-badge-count {
+  position: absolute;
+  top: -6px; right: -6px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--error);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+}
+.trash-file-card {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(252,129,129,0.05);
+  border: 1px solid rgba(252,129,129,0.15);
+  border-radius: 14px; padding: 14px 16px;
+  animation: fadeUp .3s ease both; transition: var(--transition);
+}
+.trash-file-card:hover {
+  background: rgba(252,129,129,0.1);
+  transform: translateX(4px);
+}
+.trash-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.btn-icon.restore {
+  background: rgba(104,211,145,0.12); color: var(--success);
+  border: 1px solid rgba(104,211,145,0.2);
+}
+.btn-icon.restore:hover { background: var(--success); color: #000; }
+.trash-deleted-at {
+  font-size: 11px; color: var(--error); opacity: 0.7; margin-top: 2px;
+}
 </style>
 </head>
 <body>
@@ -726,6 +761,11 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     <div class="pins-grid" id="pins-grid"></div>
   </div>
     <div class="toolbar">
+      <button class="btn-toolbar trash-badge" id="btn-trash" onclick="openTrashModal()"
+  style="background:rgba(252,129,129,0.12);color:var(--error);border:1px solid rgba(252,129,129,0.25);position:relative">
+  <i class="fas fa-trash-can"></i> Trash
+  <span class="trash-badge-count" id="trash-count" style="display:none">0</span>
+</button>
       <div class="search-wrap">
         <i class="fas fa-search"></i>
         <input class="search-input" id="search-input" type="text" placeholder="Cari nama file…" oninput="onSearch()">
@@ -1349,6 +1389,7 @@ async function loadAll(){
     document.getElementById('stat-today').textContent=pd.stats.todayUploads;
     document.getElementById('stat-size').textContent=formatSize(pd.stats.totalSize);
   }
+  await loadTrash();
 }
  
 /* ── RENDER ──────────────────────────────────────── */
@@ -2619,8 +2660,12 @@ function updateUnlockDots() {
 }
 
 function removeFolderLock() {
-  if (!confirm(`Hapus PIN folder "${unlockFolderName}"?`)) return;
   const locks = getFolderLocks();
+  if (unlockCurrent !== locks[unlockFolderId]) {
+    showMsg('unlock-pin-msg', 'error', 'circle-xmark', 'Masukkan PIN yang benar dulu sebelum menghapus.');
+    return;
+  }
+  if (!confirm(`Hapus PIN folder "${unlockFolderName}"?`)) return;
   delete locks[unlockFolderId];
   saveFolderLocks(locks);
   closeModal('modal-unlock-folder');
@@ -2773,6 +2818,29 @@ document.addEventListener('wheel', function(e) {
         ondragstart="return false">
     </div>
     <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:-4px">Klik di luar foto untuk menutup · Scroll untuk zoom</p>
+  </div>
+</div>
+<!-- MODAL TRASH -->
+<div class="modal-overlay" id="modal-trash">
+  <div class="modal-box" style="max-width:540px">
+    <div class="modal-header">
+      <h3><i class="fas fa-trash-can" style="color:var(--error);margin-right:8px"></i>Trash
+        <span class="badge" id="trash-modal-count" style="background:rgba(252,129,129,0.2);color:var(--error);border:1px solid rgba(252,129,129,0.3);margin-left:8px">0</span>
+      </h3>
+      <button class="modal-close" onclick="closeModal('modal-trash')"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+      <button class="btn-danger" id="btn-empty-trash" onclick="emptyTrash()"
+        style="width:auto;padding:9px 16px;font-size:12px;margin-top:0">
+        <i class="fas fa-fire" style="margin-right:6px"></i>Kosongkan Trash
+      </button>
+    </div>
+    <div id="trash-list" style="display:flex;flex-direction:column;gap:10px;max-height:460px;overflow-y:auto">
+      <div class="empty-state" id="trash-empty">
+        <i class="fas fa-trash-can"></i>
+        <p>Trash kosong</p>
+      </div>
+    </div>
   </div>
 </div>
 </body>
