@@ -257,24 +257,11 @@ body{font-family:'Poppins',sans-serif;min-height:100vh;color:var(--text-primary)
   .tab-btn{font-size:9.5px;padding:7px 3px}
   .profile-avatar-section{flex-direction:column;text-align:center}
   .avatar-actions{align-items:center}
-
-  .pins-grid {
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 8px;
-}
-.pin-card {
-  padding: 11px 10px 9px;
-}
-.pin-label-badge {
-  font-size: 9px;
-  padding: 2px 6px;
-}
-.pin-filename {
-  font-size: 11px;
-}
-.pin-meta {
-  font-size: 10px;
-}
+  .pins-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px}
+  .pin-card{padding:11px 10px 9px}
+  .pin-label-badge{font-size:9px;padding:2px 6px}
+  .pin-filename{font-size:11px}
+  .pin-meta{font-size:10px}
 }
 /* ── SCANNER PAGE ── */
 #page-scanner{flex-direction:column;background:#0d0d1a;min-height:100vh}
@@ -309,10 +296,7 @@ body{font-family:'Poppins',sans-serif;min-height:100vh;color:var(--text-primary)
 .scan-tip i{color:var(--accent);margin-top:1px;flex-shrink:0}
 .btn-back-dash{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:12px;border:1px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.06);color:var(--text-secondary);font-size:13px;font-weight:500;font-family:'Poppins',sans-serif;cursor:pointer;transition:var(--transition);margin-bottom:24px}
 .btn-back-dash:hover{background:rgba(255,255,255,0.12);color:var(--text-primary)}
-@media(max-width:640px){
-  .scanner-card{padding:32px 20px}
-  .scan-tips{grid-template-columns:1fr}
-}
+@media(max-width:640px){.scanner-card{padding:32px 20px}.scan-tips{grid-template-columns:1fr}}
 /* ── LIGHT MODE ── */
 .btn-theme{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:var(--text-primary);border-radius:10px;padding:8px 12px;cursor:pointer;font-size:14px;transition:var(--transition)}
 .btn-theme:hover{background:rgba(255,255,255,0.15)}
@@ -354,11 +338,7 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
 .upload-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:10px;overflow:hidden}
 .upload-bar-fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 1s cubic-bezier(.4,0,.2,1)}
 .upload-bar-val{font-size:11px;color:var(--text-secondary);width:30px;flex-shrink:0}
-@media(max-width:640px){
-  .stats-card{padding:24px 16px}
-  .stats-grid{grid-template-columns:repeat(2,1fr)}
-  .chart-wrap{height:200px}
-}
+@media(max-width:640px){.stats-card{padding:24px 16px}.stats-grid{grid-template-columns:repeat(2,1fr)}.chart-wrap{height:200px}}
 /* ── MULTI-SELECT ── */
 .select-mode-bar{display:none;align-items:center;gap:10px;padding:10px 16px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);border-radius:14px;margin-bottom:14px;flex-wrap:wrap;animation:fadeUp .25s ease both}
 .select-mode-bar.show{display:flex}
@@ -382,297 +362,83 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
 .btn-select-mode{background:rgba(167,139,250,0.1);color:var(--accent);border:1px solid rgba(167,139,250,0.22)}
 .btn-select-mode:hover{background:var(--accent);color:#fff}
 .btn-select-mode.active{background:var(--accent);color:#fff}
- 
-/* ── CHART v3 BRIGHT ── */
-.chart-card-v2 {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.11);
-  border-radius: 18px;
-  padding: 20px;
-  position: relative;
-  overflow: hidden;
-}
-.chart-card-v2::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.22), transparent);
-}
-.chart-card-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-.chart-card-head-title {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: .9px;
-  color: rgba(248,250,252,0.55);
-}
-.chart-card-badge {
-  font-size: 10px;
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: 20px;
-}
-.chart-legend-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  margin-bottom: 12px;
-}
-.chart-leg-item {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 10.5px;
-  color: rgba(248,250,252,0.7);
-  padding: 3px 8px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.09);
-}
-.chart-leg-sq {
-  width: 7px; height: 7px;
-  border-radius: 2px;
-  flex-shrink: 0;
-}
-.history-card-v2 {
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.11);
-  border-radius: 18px;
-  padding: 20px;
-  position: relative;
-  overflow: hidden;
-}
-.history-card-v2::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
-}
-.hbar-track-v2 {
-  flex: 1;
-  height: 9px;
-  background: rgba(255,255,255,0.07);
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.08);
-}
-.tc-v2 {
-  border-radius: 13px;
-  padding: 13px 14px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border-width: 1px 1px 1px 3px;
-  border-style: solid;
-  transition: all .22s;
-  cursor: default;
-}
-.tc-v2:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.12);
-}
-.sec-label-v2 {
-  font-size: 10.5px;
-  font-weight: 600;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
-  color: #c4b5fd;
-  margin-bottom: 16px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.sec-label-v2::before {
-  content: '';
-  width: 3px; height: 14px;
-  background: linear-gradient(180deg, #c084fc, #818cf8);
-  border-radius: 3px;
-}
-.sec-label-v2::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(196,181,253,0.3), transparent);
-}
+/* ── CHART v3 ── */
+.chart-card-v2{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.11);border-radius:18px;padding:20px;position:relative;overflow:hidden}
+.chart-card-v2::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.22),transparent)}
+.chart-card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.chart-card-head-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.9px;color:rgba(248,250,252,0.55)}
+.chart-card-badge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px}
+.chart-legend-row{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+.chart-leg-item{display:flex;align-items:center;gap:5px;font-size:10.5px;color:rgba(248,250,252,0.7);padding:3px 8px;border-radius:20px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.09)}
+.chart-leg-sq{width:7px;height:7px;border-radius:2px;flex-shrink:0}
+.history-card-v2{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.11);border-radius:18px;padding:20px;position:relative;overflow:hidden}
+.history-card-v2::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.18),transparent)}
+.hbar-track-v2{flex:1;height:9px;background:rgba(255,255,255,0.07);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.08)}
+.tc-v2{border-radius:13px;padding:13px 14px;display:flex;align-items:center;gap:10px;border-width:1px 1px 1px 3px;border-style:solid;transition:all .22s;cursor:default}
+.tc-v2:hover{transform:translateY(-2px);filter:brightness(1.12)}
+.sec-label-v2{font-size:10.5px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:#c4b5fd;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.sec-label-v2::before{content:'';width:3px;height:14px;background:linear-gradient(180deg,#c084fc,#818cf8);border-radius:3px}
+.sec-label-v2::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(196,181,253,0.3),transparent)}
 /* ── PIN FEATURE ── */
-.pins-section { margin-bottom: 24px; }
-.pins-section-header {
-  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
-}
-.pins-section-header .sec-label-pin {
-  font-size: 10.5px; font-weight: 600; letter-spacing: 1.2px;
-  text-transform: uppercase; color: #fbbf24;
-  display: flex; align-items: center; gap: 8px;
-}
-.pins-section-header .sec-label-pin::before {
-  content: ''; width: 3px; height: 13px;
-  background: #fbbf24; border-radius: 3px;
-}
-.pins-grid {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 10px;
-}
-.pin-card {
-  background: rgba(251,191,36,0.06);
-  border: 1px solid rgba(251,191,36,0.22);
-  border-left: 3px solid #fbbf24;
-  border-radius: 14px; padding: 13px 12px 11px;
-  position: relative; cursor: pointer;
-  transition: var(--transition); animation: fadeUp .3s ease both;
-}
-.pin-card:hover { background: rgba(251,191,36,0.12); transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.3); }
-.pin-label-badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 2px 8px; border-radius: 20px;
-  background: rgba(251,191,36,0.18); color: #fbbf24;
-  font-size: 10px; font-weight: 700; margin-bottom: 8px;
-  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.pin-filename {
-  font-size: 12px; font-weight: 600; color: var(--text-primary);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 4px;
-}
-.pin-meta { font-size: 11px; color: var(--text-secondary); }
-.btn-unpin {
-  position: absolute; top: 7px; right: 7px;
-  width: 22px; height: 22px; border-radius: 50%;
-  border: 1px solid rgba(252,129,129,0.25);
-  background: rgba(252,129,129,0.08); color: var(--error);
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; font-size: 11px; transition: var(--transition); line-height:1;
-}
-.btn-unpin:hover { background: var(--error); color: #fff; }
-.btn-pin {
-  background: rgba(251,191,36,0.12); color: #fbbf24;
-  border: 1px solid rgba(251,191,36,0.25);
-}
-.btn-pin:hover { background: #fbbf24; color: #000; }
-/* Modal pin */
-#modal-pin .pin-target-info {
-  background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 10px; padding: 10px 12px; margin-bottom: 14px;
-  font-size: 13px; color: var(--text-secondary);
-}
-#modal-pin .pin-target-info span { color: var(--text-primary); font-weight: 600; }
-/* ── FOLDER LOCK FEATURE ── */
-.folder-card.locked {
-  border: 1px solid rgba(252,129,129,0.3);
-  background: rgba(252,129,129,0.05);
-}
-.folder-card.locked .folder-icon {
-  background: rgba(252,129,129,0.15);
-  color: var(--error);
-}
-.folder-lock-badge {
-  position: absolute;
-  bottom: 8px; right: 8px;
-  width: 20px; height: 20px;
-  border-radius: 50%;
-  background: rgba(252,129,129,0.15);
-  border: 1px solid rgba(252,129,129,0.3);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; color: var(--error);
-}
-.btn-folder-action.lock {
-  background: rgba(252,129,129,0.15);
-  color: var(--error);
-}
-.btn-folder-action.lock:hover { background: var(--error); color: #fff; }
-.btn-folder-action.unlock {
-  background: rgba(104,211,145,0.15);
-  color: var(--success);
-}
-.btn-folder-action.unlock:hover { background: var(--success); color: #000; }
-/* PIN input dots */
-.pin-dots {
-  display: flex; gap: 12px; justify-content: center; margin: 20px 0;
-}
-.pin-dot {
-  width: 14px; height: 14px; border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.25);
-  background: transparent; transition: var(--transition);
-}
-.pin-dot.filled { background: var(--accent); border-color: var(--accent); }
-.pin-numpad {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 10px; margin-bottom: 16px;
-}
-.pin-key {
-  padding: 14px; border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.06);
-  color: var(--text-primary); font-size: 18px; font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  cursor: pointer; transition: var(--transition); text-align: center;
-}
-.pin-key:hover { background: rgba(167,139,250,0.15); border-color: var(--accent); }
-.pin-key:active { transform: scale(0.94); }
-.pin-key.del { font-size: 14px; color: var(--error); }
-.pin-key.del:hover { background: rgba(252,129,129,0.15); border-color: var(--error); }
-.pin-shake { animation: pinShake .4s ease; }
-@keyframes pinShake {
-  0%,100%{transform:translateX(0)}
-  20%{transform:translateX(-8px)}
-  40%{transform:translateX(8px)}
-  60%{transform:translateX(-6px)}
-  80%{transform:translateX(6px)}
-}
+.pins-section{margin-bottom:24px}
+.pins-section-header{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.pins-section-header .sec-label-pin{font-size:10.5px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:#fbbf24;display:flex;align-items:center;gap:8px}
+.pins-section-header .sec-label-pin::before{content:'';width:3px;height:13px;background:#fbbf24;border-radius:3px}
+.pins-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+.pin-card{background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.22);border-left:3px solid #fbbf24;border-radius:14px;padding:13px 12px 11px;position:relative;cursor:pointer;transition:var(--transition);animation:fadeUp .3s ease both}
+.pin-card:hover{background:rgba(251,191,36,0.12);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,0.3)}
+.pin-label-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;background:rgba(251,191,36,0.18);color:#fbbf24;font-size:10px;font-weight:700;margin-bottom:8px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pin-filename{font-size:12px;font-weight:600;color:var(--text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:4px}
+.pin-meta{font-size:11px;color:var(--text-secondary)}
+.btn-unpin{position:absolute;top:7px;right:7px;width:22px;height:22px;border-radius:50%;border:1px solid rgba(252,129,129,0.25);background:rgba(252,129,129,0.08);color:var(--error);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;transition:var(--transition);line-height:1}
+.btn-unpin:hover{background:var(--error);color:#fff}
+.btn-pin{background:rgba(251,191,36,0.12);color:#fbbf24;border:1px solid rgba(251,191,36,0.25)}
+.btn-pin:hover{background:#fbbf24;color:#000}
+#modal-pin .pin-target-info{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:10px 12px;margin-bottom:14px;font-size:13px;color:var(--text-secondary)}
+#modal-pin .pin-target-info span{color:var(--text-primary);font-weight:600}
+/* ── FOLDER LOCK ── */
+.folder-card.locked{border:1px solid rgba(252,129,129,0.3);background:rgba(252,129,129,0.05)}
+.folder-card.locked .folder-icon{background:rgba(252,129,129,0.15);color:var(--error)}
+.folder-lock-badge{position:absolute;bottom:8px;right:8px;width:20px;height:20px;border-radius:50%;background:rgba(252,129,129,0.15);border:1px solid rgba(252,129,129,0.3);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--error)}
+.btn-folder-action.lock{background:rgba(252,129,129,0.15);color:var(--error)}
+.btn-folder-action.lock:hover{background:var(--error);color:#fff}
+.btn-folder-action.unlock{background:rgba(104,211,145,0.15);color:var(--success)}
+.btn-folder-action.unlock:hover{background:var(--success);color:#000}
+.pin-dots{display:flex;gap:12px;justify-content:center;margin:20px 0}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid rgba(255,255,255,0.25);background:transparent;transition:var(--transition)}
+.pin-dot.filled{background:var(--accent);border-color:var(--accent)}
+.pin-numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.pin-key{padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.06);color:var(--text-primary);font-size:18px;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;transition:var(--transition);text-align:center}
+.pin-key:hover{background:rgba(167,139,250,0.15);border-color:var(--accent)}
+.pin-key:active{transform:scale(0.94)}
+.pin-key.del{font-size:14px;color:var(--error)}
+.pin-key.del:hover{background:rgba(252,129,129,0.15);border-color:var(--error)}
+.pin-shake{animation:pinShake .4s ease}
+@keyframes pinShake{0%,100%{transform:translateX(0)}20%{transform:translateX(-8px)}40%{transform:translateX(8px)}60%{transform:translateX(-6px)}80%{transform:translateX(6px)}}
 /* ── TRASH ── */
-.trash-badge {
-  position: relative;
-}
-.trash-badge-count {
-  position: absolute;
-  top: -6px; right: -6px;
-  width: 18px; height: 18px;
-  border-radius: 50%;
-  background: var(--error);
-  color: #fff;
-  font-size: 10px;
-  font-weight: 700;
-  display: flex; align-items: center; justify-content: center;
-}
-.trash-file-card {
-  display: flex; align-items: center; gap: 14px;
-  background: rgba(252,129,129,0.05);
-  border: 1px solid rgba(252,129,129,0.15);
-  border-radius: 14px; padding: 14px 16px;
-  animation: fadeUp .3s ease both; transition: var(--transition);
-}
-.trash-file-card:hover {
-  background: rgba(252,129,129,0.1);
-  transform: translateX(4px);
-}
-.trash-actions { display: flex; gap: 6px; flex-shrink: 0; }
-.btn-icon.restore {
-  background: rgba(104,211,145,0.12); color: var(--success);
-  border: 1px solid rgba(104,211,145,0.2);
-}
-.btn-icon.restore:hover { background: var(--success); color: #000; }
-.trash-deleted-at {
-  font-size: 11px; color: var(--error); opacity: 0.7; margin-top: 2px;
-}
+.trash-badge{position:relative}
+.trash-badge-count{position:absolute;top:-6px;right:-6px;width:18px;height:18px;border-radius:50%;background:var(--error);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.trash-file-card{display:flex;align-items:center;gap:14px;background:rgba(252,129,129,0.05);border:1px solid rgba(252,129,129,0.15);border-radius:14px;padding:14px 16px;animation:fadeUp .3s ease both;transition:var(--transition)}
+.trash-file-card:hover{background:rgba(252,129,129,0.1);transform:translateX(4px)}
+.trash-actions{display:flex;gap:6px;flex-shrink:0}
+.btn-icon.restore{background:rgba(104,211,145,0.12);color:var(--success);border:1px solid rgba(104,211,145,0.2)}
+.btn-icon.restore:hover{background:var(--success);color:#000}
+.trash-deleted-at{font-size:11px;color:var(--error);opacity:0.7;margin-top:2px}
 </style>
 </head>
 <body>
- 
+
 <div id="page-loader">
   <div class="loader-logo"><i class="fas fa-file-arrow-up"></i></div>
   <div class="loader-spinner"></div>
   <div class="loader-text">Memuat Veilfile…</div>
 </div>
- 
+
 <div id="bg-wrap">
   <video autoplay muted loop playsinline><source src="background.mp4" type="video/mp4"></video>
 </div>
 <div id="bg-overlay"></div>
- 
+
 <!-- LOGIN -->
 <div id="page-login" class="page active">
   <div class="auth-wrapper">
@@ -703,7 +469,7 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     </div>
   </div>
 </div>
- 
+
 <!-- REGISTER -->
 <div id="page-register" class="page">
   <div class="auth-wrapper">
@@ -723,7 +489,7 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     </div>
   </div>
 </div>
- 
+
 <!-- DASHBOARD -->
 <div id="page-dashboard" class="page" style="display:none">
   <nav class="topbar">
@@ -740,7 +506,7 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
       <button class="btn-logout" onclick="doLogout()"><i class="fas fa-arrow-right-from-bracket"></i> Keluar</button>
     </div>
   </nav>
- 
+
   <div class="dashboard-body">
     <div class="dash-header">
       <div><h2>File Tugas Saya</h2><p id="dash-greeting">Selamat datang kembali!</p></div>
@@ -751,21 +517,19 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
       <div class="stat-card"><div class="stat-icon"><i class="fas fa-hard-drive"></i></div><div class="stat-value" id="stat-size">0 KB</div><div class="stat-label">Penyimpanan</div></div>
     </div>
     <!-- PIN SECTION -->
-  <div class="pins-section" id="pins-section" style="display:none">
-    <div class="pins-section-header">
-      <span class="sec-label-pin">
-        <i class="fas fa-thumbtack" style="font-size:11px"></i> File Disematkan
-        </span>
-      <span class="badge" id="pin-count" style="background:rgba(251,191,36,0.2);color:#fbbf24;border:1px solid rgba(251,191,36,0.3)">0</span>
+    <div class="pins-section" id="pins-section" style="display:none">
+      <div class="pins-section-header">
+        <span class="sec-label-pin"><i class="fas fa-thumbtack" style="font-size:11px"></i> File Disematkan</span>
+        <span class="badge" id="pin-count" style="background:rgba(251,191,36,0.2);color:#fbbf24;border:1px solid rgba(251,191,36,0.3)">0</span>
       </div>
-    <div class="pins-grid" id="pins-grid"></div>
-  </div>
+      <div class="pins-grid" id="pins-grid"></div>
+    </div>
     <div class="toolbar">
       <button class="btn-toolbar trash-badge" id="btn-trash" onclick="openTrashModal()"
-  style="background:rgba(252,129,129,0.12);color:var(--error);border:1px solid rgba(252,129,129,0.25);position:relative">
-  <i class="fas fa-trash-can"></i> Trash
-  <span class="trash-badge-count" id="trash-count" style="display:none">0</span>
-</button>
+        style="background:rgba(252,129,129,0.12);color:var(--error);border:1px solid rgba(252,129,129,0.25);position:relative">
+        <i class="fas fa-trash-can"></i> Trash
+        <span class="trash-badge-count" id="trash-count" style="display:none">0</span>
+      </button>
       <div class="search-wrap">
         <i class="fas fa-search"></i>
         <input class="search-input" id="search-input" type="text" placeholder="Cari nama file…" oninput="onSearch()">
@@ -786,18 +550,10 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     <!-- Bulk action bar -->
     <div class="select-mode-bar" id="select-mode-bar">
       <span class="select-count" id="select-count">0 file dipilih</span>
-      <button class="btn-bulk select-all" onclick="selectAllFiles()">
-        <i class="fas fa-check-double"></i> Pilih Semua
-      </button>
-      <button class="btn-bulk move" onclick="openBulkMoveModal()">
-        <i class="fas fa-folder-open"></i> Pindahkan
-      </button>
-      <button class="btn-bulk delete" onclick="bulkDeleteFiles()">
-        <i class="fas fa-trash"></i> Hapus
-      </button>
-      <button class="btn-bulk cancel" onclick="exitSelectMode()">
-        <i class="fas fa-times"></i> Batal
-      </button>
+      <button class="btn-bulk select-all" onclick="selectAllFiles()"><i class="fas fa-check-double"></i> Pilih Semua</button>
+      <button class="btn-bulk move" onclick="openBulkMoveModal()"><i class="fas fa-folder-open"></i> Pindahkan</button>
+      <button class="btn-bulk delete" onclick="bulkDeleteFiles()"><i class="fas fa-trash"></i> Hapus</button>
+      <button class="btn-bulk cancel" onclick="exitSelectMode()"><i class="fas fa-times"></i> Batal</button>
     </div>
     <div class="breadcrumb" id="breadcrumb">
       <span class="breadcrumb-item active" onclick="goRoot()"><i class="fas fa-house" style="margin-right:4px"></i>Semua File</span>
@@ -822,7 +578,7 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     </div>
   </div>
 </div>
- 
+
 <!-- PROFILE MODAL -->
 <div class="modal-overlay" id="modal-profile">
   <div class="modal-box">
@@ -831,23 +587,16 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
       <button class="modal-close" onclick="closeProfileModal()"><i class="fas fa-times"></i></button>
     </div>
     <div class="profile-avatar-section">
-      <div class="profile-avatar-big" id="modal-avatar">
-        A
-        <div class="avatar-cam-overlay" onclick="triggerAvatarUpload()" style="pointer-events:all;cursor:pointer">
-          <i class="fas fa-camera"></i>
-        </div>
+      <div class="profile-avatar-big" id="modal-avatar">A
+        <div class="avatar-cam-overlay" onclick="triggerAvatarUpload()" style="pointer-events:all;cursor:pointer"><i class="fas fa-camera"></i></div>
       </div>
       <div>
         <h4 id="modal-displayname" style="font-size:16px;font-weight:700;margin-bottom:2px"></h4>
         <span id="modal-email" style="font-size:12px;color:var(--text-secondary)"></span>
         <div style="font-size:11px;color:var(--text-secondary);margin-top:4px"><i class="fas fa-calendar" style="margin-right:4px"></i>Bergabung <span id="modal-joined">-</span></div>
         <div class="avatar-actions" style="margin-top:10px">
-          <button class="btn-avatar-upload" onclick="triggerAvatarUpload()">
-            <i class="fas fa-camera"></i> Ganti Foto
-          </button>
-          <button class="btn-avatar-remove" id="btn-remove-avatar" onclick="removeAvatar()" style="display:none">
-            <i class="fas fa-trash-can"></i> Hapus Foto
-          </button>
+          <button class="btn-avatar-upload" onclick="triggerAvatarUpload()"><i class="fas fa-camera"></i> Ganti Foto</button>
+          <button class="btn-avatar-remove" id="btn-remove-avatar" onclick="removeAvatar()" style="display:none"><i class="fas fa-trash-can"></i> Hapus Foto</button>
           <span class="avatar-hint">JPG, PNG, WEBP · Maks 5MB</span>
         </div>
         <div class="color-picker-row" id="color-picker">
@@ -867,12 +616,11 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
       <div class="p-stat"><div class="p-stat-val" id="modal-stat-today">0</div><div class="p-stat-lbl">Hari Ini</div></div>
       <div class="p-stat"><div class="p-stat-val" id="modal-stat-size">0 KB</div><div class="p-stat-lbl">Storage</div></div>
     </div>
-    <!-- GANTI blok tab-row ini -->
     <div class="tab-row">
-      <button class="tab-btn"            onclick="switchTab('view')">Lihat Profil</button>
-      <button class="tab-btn"            onclick="switchTab('edit')">Edit Profil</button>
-      <button class="tab-btn"            onclick="switchTab('password')">Password</button>
-      <button class="tab-btn"            onclick="switchTab('account')">Akun</button>
+      <button class="tab-btn" onclick="switchTab('view')">Lihat Profil</button>
+      <button class="tab-btn" onclick="switchTab('edit')">Edit Profil</button>
+      <button class="tab-btn" onclick="switchTab('password')">Password</button>
+      <button class="tab-btn" onclick="switchTab('account')">Akun</button>
       <button class="tab-btn danger-tab" onclick="switchTab('delete')">Hapus Akun</button>
     </div>
     <div class="tab-content" id="tab-view">
@@ -925,10 +673,7 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     </div>
     <div class="tab-content" id="tab-account">
       <div id="account-msg" class="msg-box"></div>
-      <p style="font-size:12px;color:var(--text-secondary);margin-bottom:18px;line-height:1.6">
-        <i class="fas fa-circle-info" style="color:var(--accent2);margin-right:5px"></i>
-        Ubah username atau email. Kosongkan kolom yang tidak ingin diubah.
-      </p>
+      <p style="font-size:12px;color:var(--text-secondary);margin-bottom:18px;line-height:1.6"><i class="fas fa-circle-info" style="color:var(--accent2);margin-right:5px"></i>Ubah username atau email. Kosongkan kolom yang tidak ingin diubah.</p>
       <div class="field-group"><label>Username Baru</label><div class="input-wrap"><input type="text" id="acc-username" placeholder="Username baru (kosongkan jika tidak)" autocomplete="off"><i class="fas fa-user input-icon"></i></div></div>
       <div class="field-group"><label>Email Baru</label><div class="input-wrap"><input type="email" id="acc-email" placeholder="Email baru (kosongkan jika tidak)" autocomplete="off"><i class="fas fa-envelope input-icon"></i></div></div>
       <hr class="section-divider">
@@ -944,16 +689,13 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
       <div class="field-group"><label>Konfirmasi Password</label><div class="input-wrap"><input type="password" id="del-password" placeholder="Masukkan password"><i class="fas fa-lock input-icon"></i><button class="toggle-pw" type="button" onclick="togglePw('del-password',this)" tabindex="-1"><i class="fas fa-eye"></i></button></div></div>
       <div class="field-group">
         <label>Ketik "HAPUS AKUN" untuk konfirmasi</label>
-        <div class="input-wrap">
-          <input type="text" id="del-confirm-text" placeholder='Ketik: HAPUS AKUN' autocomplete="off">
-          <i class="fas fa-keyboard input-icon"></i>
-        </div>
+        <div class="input-wrap"><input type="text" id="del-confirm-text" placeholder='Ketik: HAPUS AKUN' autocomplete="off"><i class="fas fa-keyboard input-icon"></i></div>
       </div>
       <button class="btn-danger" id="btn-delete-account" onclick="deleteAccount()"><i class="fas fa-trash-can" style="margin-right:8px"></i>Hapus Akun Saya Selamanya</button>
     </div>
   </div>
 </div>
- 
+
 <!-- NEW FOLDER MODAL -->
 <div class="modal-overlay small-modal" id="modal-new-folder">
   <div class="modal-box" style="max-width:360px;padding:28px">
@@ -966,7 +708,7 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     <button class="btn-primary" onclick="createFolder()"><i class="fas fa-plus" style="margin-right:8px"></i>Buat Folder</button>
   </div>
 </div>
- 
+
 <!-- RENAME FOLDER MODAL -->
 <div class="modal-overlay small-modal" id="modal-rename-folder">
   <div class="modal-box" style="max-width:360px;padding:28px">
@@ -979,7 +721,7 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     <button class="btn-primary" onclick="submitRenameFolder()"><i class="fas fa-check" style="margin-right:8px"></i>Simpan</button>
   </div>
 </div>
- 
+
 <!-- RENAME FILE MODAL -->
 <div class="modal-overlay small-modal" id="modal-rename-file">
   <div class="modal-box" style="max-width:360px;padding:28px">
@@ -992,7 +734,7 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     <button class="btn-primary" onclick="submitRenameFile()"><i class="fas fa-check" style="margin-right:8px"></i>Simpan</button>
   </div>
 </div>
- 
+
 <!-- MOVE FILE MODAL -->
 <div class="modal-overlay small-modal" id="modal-move-file">
   <div class="modal-box" style="max-width:360px;padding:28px">
@@ -1004,7 +746,7 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     <div id="move-folder-list" style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;margin-bottom:16px"></div>
   </div>
 </div>
- 
+
 <!-- BULK MOVE MODAL -->
 <div class="modal-overlay small-modal" id="modal-bulk-move">
   <div class="modal-box" style="max-width:360px;padding:28px">
@@ -1016,7 +758,7 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     <div id="bulk-move-folder-list" style="display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;margin-bottom:16px"></div>
   </div>
 </div>
- 
+
 <!-- REMOVE BG MODAL -->
 <div class="modal-overlay" id="modal-rmbg">
   <div class="modal-box" style="max-width:500px">
@@ -1044,7 +786,107 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     </div>
   </div>
 </div>
- 
+
+<!-- PIN MODAL -->
+<div class="modal-overlay small-modal" id="modal-pin">
+  <div class="modal-box" style="max-width:360px;padding:28px">
+    <div class="modal-header">
+      <h3><i class="fas fa-thumbtack" style="color:#fbbf24;margin-right:8px"></i>Sematkan File</h3>
+      <button class="modal-close" onclick="closeModal('modal-pin')"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="pin-msg" class="msg-box"></div>
+    <div class="pin-target-info" id="pin-target-info">
+      <i class="fas fa-file" style="margin-right:6px;color:#fbbf24"></i>
+      <span id="pin-target-name">-</span>
+    </div>
+    <div class="field-group">
+      <label>Nama Pin (Label)</label>
+      <div class="input-wrap">
+        <input type="text" id="pin-label-input" placeholder="cth: Tugas Penting, Referensi…" maxlength="40">
+        <i class="fas fa-tag input-icon"></i>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--text-secondary);margin-bottom:14px;margin-top:-8px">Label ini tampil di atas kartu pin kamu</p>
+    <button class="btn-primary" onclick="submitPin()"><i class="fas fa-thumbtack" style="margin-right:8px"></i>Sematkan File</button>
+  </div>
+</div>
+
+<!-- MODAL SET FOLDER PIN -->
+<div class="modal-overlay small-modal" id="modal-set-folder-pin">
+  <div class="modal-box" style="max-width:320px;padding:28px;text-align:center">
+    <div class="modal-header" style="justify-content:center;position:relative">
+      <h3><i class="fas fa-lock" style="color:var(--error);margin-right:8px"></i>Buat PIN Folder</h3>
+      <button class="modal-close" style="position:absolute;right:0;top:0" onclick="closeModal('modal-set-folder-pin')"><i class="fas fa-times"></i></button>
+    </div>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:4px" id="set-pin-folder-name"></p>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:4px" id="set-pin-step-label">Masukkan PIN baru (4 digit)</p>
+    <div class="pin-dots" id="set-pin-dots">
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+    </div>
+    <div id="set-pin-msg" class="msg-box" style="margin-bottom:12px"></div>
+    <div class="pin-numpad" id="set-pin-numpad"></div>
+  </div>
+</div>
+
+<!-- MODAL UNLOCK FOLDER -->
+<div class="modal-overlay small-modal" id="modal-unlock-folder">
+  <div class="modal-box" style="max-width:320px;padding:28px;text-align:center">
+    <div class="modal-header" style="justify-content:center;position:relative">
+      <h3><i class="fas fa-lock" style="color:var(--error);margin-right:8px"></i>Folder Terkunci</h3>
+      <button class="modal-close" style="position:absolute;right:0;top:0" onclick="closeModal('modal-unlock-folder')"><i class="fas fa-times"></i></button>
+    </div>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:4px" id="unlock-folder-name"></p>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:4px">Masukkan PIN untuk membuka</p>
+    <div class="pin-dots" id="unlock-pin-dots">
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+    </div>
+    <div id="unlock-pin-msg" class="msg-box" style="margin-bottom:12px"></div>
+    <div class="pin-numpad" id="unlock-pin-numpad"></div>
+    <button class="btn-danger" style="font-size:12px;padding:10px;margin-top:4px" onclick="removeFolderLock()">
+      <i class="fas fa-trash-can" style="margin-right:6px"></i>Hapus PIN Folder Ini
+    </button>
+  </div>
+</div>
+
+<!-- MODAL PHOTO VIEWER -->
+<div class="modal-overlay" id="modal-photo-viewer" onclick="closePhotoViewer(event)">
+  <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:16px;max-width:90vw;max-height:90vh">
+    <div style="display:flex;gap:10px;align-items:center">
+      <button onclick="zoomPhoto(-0.2)" style="width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s"><i class="fas fa-magnifying-glass-minus"></i></button>
+      <span id="zoom-level" style="font-size:13px;color:rgba(255,255,255,0.7);min-width:44px;text-align:center">100%</span>
+      <button onclick="zoomPhoto(0.2)" style="width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s"><i class="fas fa-magnifying-glass-plus"></i></button>
+      <button onclick="resetZoom()" style="width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" title="Reset zoom"><i class="fas fa-arrows-to-dot"></i></button>
+      <button onclick="closeModal('modal-photo-viewer')" style="width:38px;height:38px;border-radius:50%;border:1px solid rgba(252,129,129,0.3);background:rgba(252,129,129,0.15);color:#fc8181;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="overflow:hidden;border-radius:16px;max-width:80vw;max-height:75vh;display:flex;align-items:center;justify-content:center">
+      <img id="photo-viewer-img" src="" alt="Foto Profil" style="max-width:80vw;max-height:75vh;border-radius:16px;object-fit:contain;transition:transform 0.25s cubic-bezier(.4,0,.2,1);cursor:grab;user-select:none" ondragstart="return false">
+    </div>
+    <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:-4px">Klik di luar foto untuk menutup · Scroll untuk zoom</p>
+  </div>
+</div>
+
+<!-- MODAL TRASH -->
+<div class="modal-overlay" id="modal-trash">
+  <div class="modal-box" style="max-width:540px">
+    <div class="modal-header">
+      <h3><i class="fas fa-trash-can" style="color:var(--error);margin-right:8px"></i>Trash
+        <span class="badge" id="trash-modal-count" style="background:rgba(252,129,129,0.2);color:var(--error);border:1px solid rgba(252,129,129,0.3);margin-left:8px">0</span>
+      </h3>
+      <button class="modal-close" onclick="closeModal('modal-trash')"><i class="fas fa-times"></i></button>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+      <button class="btn-danger" id="btn-empty-trash" onclick="emptyTrash()" style="width:auto;padding:9px 16px;font-size:12px;margin-top:0">
+        <i class="fas fa-fire" style="margin-right:6px"></i>Kosongkan Trash
+      </button>
+    </div>
+    <div id="trash-list" style="display:flex;flex-direction:column;gap:10px;max-height:460px;overflow-y:auto">
+      <div class="empty-state" id="trash-empty"><i class="fas fa-trash-can"></i><p>Trash kosong</p></div>
+    </div>
+  </div>
+</div>
+
 <!-- SCANNER PAGE -->
 <div id="page-scanner" class="page" style="display:none">
   <nav class="topbar">
@@ -1057,18 +899,12 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
         <div class="user-avatar" id="scan-avatar">A</div>
         <span class="user-name" id="scan-username">User</span>
       </div>
-      <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" title="Ganti tema">
-        <i class="fas fa-sun" id="theme-icon"></i>
-      </button>
-      <button class="btn-logout" onclick="doLogout()">
-        <i class="fas fa-arrow-right-from-bracket"></i> Keluar
-      </button>
+      <button class="btn-theme" id="btn-theme" onclick="toggleTheme()" title="Ganti tema"><i class="fas fa-sun" id="theme-icon"></i></button>
+      <button class="btn-logout" onclick="doLogout()"><i class="fas fa-arrow-right-from-bracket"></i> Keluar</button>
     </div>
   </nav>
   <div class="scanner-body">
-    <button class="btn-back-dash" onclick="goToDashboard()">
-      <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
-    </button>
+    <button class="btn-back-dash" onclick="goToDashboard()"><i class="fas fa-arrow-left"></i> Kembali ke Dashboard</button>
     <div class="scanner-card">
       <div class="scanner-title">
         <div class="scan-icon"><i class="fas fa-camera-viewfinder"></i></div>
@@ -1082,30 +918,23 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
            ondragleave="this.classList.remove('dragover')">
         <input type="file" id="scan-file-input" accept="image/*" onchange="handleScanFile(this.files[0])">
         <div style="margin-bottom:16px;opacity:0.85">
-  <svg width="120" height="100" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- Frame sudut kiri atas -->
-    <path d="M10 30 L10 10 L30 10" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    <!-- Frame sudut kanan atas -->
-    <path d="M90 10 L110 10 L110 30" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    <!-- Frame sudut kiri bawah -->
-    <path d="M10 70 L10 90 L30 90" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    <!-- Frame sudut kanan bawah -->
-    <path d="M90 90 L110 90 L110 70" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    <!-- Garis scan animasi -->
-    <line x1="15" y1="50" x2="105" y2="50" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" opacity="0.8">
-      <animate attributeName="y1" values="20;80;20" dur="2s" repeatCount="indefinite"/>
-      <animate attributeName="y2" values="20;80;20" dur="2s" repeatCount="indefinite"/>
-      <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite"/>
-    </line>
-    <!-- Ikon gambar di tengah -->
-    <rect x="42" y="35" width="36" height="30" rx="4" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" fill="rgba(167,139,250,0.08)"/>
-    <circle cx="51" cy="44" r="3" fill="rgba(167,139,250,0.5)"/>
-    <path d="M42 58 L52 48 L60 56 L66 50 L78 58" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    <!-- Ikon kaca pembesar -->
-    <circle cx="88" cy="72" r="8" stroke="#f472b6" stroke-width="2" fill="none"/>
-    <line x1="94" y1="78" x2="100" y2="84" stroke="#f472b6" stroke-width="2" stroke-linecap="round"/>
-  </svg>
-</div>
+          <svg width="120" height="100" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 30 L10 10 L30 10" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M90 10 L110 10 L110 30" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 70 L10 90 L30 90" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M90 90 L110 90 L110 70" stroke="#a78bfa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="15" y1="50" x2="105" y2="50" stroke="#60a5fa" stroke-width="2" stroke-linecap="round" opacity="0.8">
+              <animate attributeName="y1" values="20;80;20" dur="2s" repeatCount="indefinite"/>
+              <animate attributeName="y2" values="20;80;20" dur="2s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite"/>
+            </line>
+            <rect x="42" y="35" width="36" height="30" rx="4" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" fill="rgba(167,139,250,0.08)"/>
+            <circle cx="51" cy="44" r="3" fill="rgba(167,139,250,0.5)"/>
+            <path d="M42 58 L52 48 L60 56 L66 50 L78 58" stroke="rgba(167,139,250,0.5)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <circle cx="88" cy="72" r="8" stroke="#f472b6" stroke-width="2" fill="none"/>
+            <line x1="94" y1="78" x2="100" y2="84" stroke="#f472b6" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
         <div class="scan-drop-icon"><i class="fas fa-image"></i></div>
         <h3>Seret gambar ke sini</h3>
         <p>atau klik untuk memilih gambar dari perangkat kamu</p>
@@ -1113,13 +942,10 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
       </div>
       <div class="scan-preview-wrap" id="scan-preview-wrap">
         <img id="scan-preview-img" src="" alt="Preview">
-        <button class="scan-preview-close" onclick="clearScanImage()">
-          <i class="fas fa-times"></i>
-        </button>
+        <button class="scan-preview-close" onclick="clearScanImage()"><i class="fas fa-times"></i></button>
       </div>
       <button class="btn-scan" id="btn-scan" onclick="doGoogleLensScan()" disabled>
-        <i class="fas fa-magnifying-glass"></i>
-        Copy &amp; Buka Google Lens
+        <i class="fas fa-magnifying-glass"></i> Copy &amp; Buka Google Lens
       </button>
       <div class="scan-divider">tips penggunaan</div>
       <div class="scan-tips">
@@ -1131,7 +957,7 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     </div>
   </div>
 </div>
- 
+
 <!-- STATS PAGE -->
 <div id="page-stats" class="page" style="display:none">
   <nav class="topbar">
@@ -1140,86 +966,54 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
       <span class="topbar-title">Veilfile</span>
     </div>
     <div class="topbar-right">
-      <button class="btn-theme" id="btn-theme-stats" onclick="toggleTheme()" title="Ganti tema">
-        <i class="fas fa-sun" id="theme-icon-stats"></i>
-      </button>
+      <button class="btn-theme" id="btn-theme-stats" onclick="toggleTheme()" title="Ganti tema"><i class="fas fa-sun" id="theme-icon-stats"></i></button>
       <div class="topbar-user" onclick="openProfileModal()">
         <div class="user-avatar" id="stats-avatar">A</div>
         <span class="user-name" id="stats-username">User</span>
       </div>
-      <button class="btn-logout" onclick="doLogout()">
-        <i class="fas fa-arrow-right-from-bracket"></i> Keluar
-      </button>
+      <button class="btn-logout" onclick="doLogout()"><i class="fas fa-arrow-right-from-bracket"></i> Keluar</button>
     </div>
   </nav>
   <div class="stats-body">
-    <button class="btn-back-dash" onclick="goToDashboard()">
-      <i class="fas fa-arrow-left"></i> Kembali ke Dashboard
-    </button>
+    <button class="btn-back-dash" onclick="goToDashboard()"><i class="fas fa-arrow-left"></i> Kembali ke Dashboard</button>
     <div class="stats-card">
       <div class="stats-title">
         <div class="stats-icon"><i class="fas fa-chart-line"></i></div>
         <h2>Statistik Storage</h2>
         <p>Ringkasan penggunaan penyimpanan kamu</p>
       </div>
-      <!-- Summary -->
       <div class="stats-grid">
-        <div class="stats-item">
-          <div class="stats-item-val" id="stats-total-files">0</div>
-          <div class="stats-item-lbl">Total File</div>
-        </div>
-        <div class="stats-item">
-          <div class="stats-item-val" id="stats-total-size">0 KB</div>
-          <div class="stats-item-lbl">Total Storage</div>
-        </div>
-        <div class="stats-item">
-          <div class="stats-item-val" id="stats-total-folders">0</div>
-          <div class="stats-item-lbl">Total Folder</div>
-        </div>
+        <div class="stats-item"><div class="stats-item-val" id="stats-total-files">0</div><div class="stats-item-lbl">Total File</div></div>
+        <div class="stats-item"><div class="stats-item-val" id="stats-total-size">0 KB</div><div class="stats-item-lbl">Total Storage</div></div>
+        <div class="stats-item"><div class="stats-item-val" id="stats-total-folders">0</div><div class="stats-item-lbl">Total Folder</div></div>
       </div>
- 
-      <!-- Chart v3 Bright HTML (Langkah 3) -->
       <div class="sec-label-v2"><i class="fas fa-chart-pie" style="font-size:12px"></i> Distribusi tipe file</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
         <div class="chart-card-v2">
           <div class="chart-card-head">
             <span class="chart-card-head-title">Komposisi</span>
-            <span class="chart-card-badge" id="badge-total"
-              style="background:rgba(192,132,252,0.2);color:#e879f9;border:1px solid rgba(192,132,252,0.35)">
-              0 file
-            </span>
+            <span class="chart-card-badge" id="badge-total" style="background:rgba(192,132,252,0.2);color:#e879f9;border:1px solid rgba(192,132,252,0.35)">0 file</span>
           </div>
           <div class="chart-legend-row" id="legend-donut"></div>
-          <div style="position:relative;width:100%;height:210px">
-            <canvas id="donut-chart" role="img" aria-label="Donut chart distribusi tipe file">Distribusi tipe file</canvas>
-          </div>
+          <div style="position:relative;width:100%;height:210px"><canvas id="donut-chart"></canvas></div>
         </div>
         <div class="chart-card-v2">
           <div class="chart-card-head">
             <span class="chart-card-head-title">Perbandingan</span>
-            <span class="chart-card-badge" id="badge-types"
-              style="background:rgba(56,189,248,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.35)">
-              0 tipe
-            </span>
+            <span class="chart-card-badge" id="badge-types" style="background:rgba(56,189,248,0.2);color:#38bdf8;border:1px solid rgba(56,189,248,0.35)">0 tipe</span>
           </div>
           <div class="chart-legend-row" id="legend-bar"></div>
-          <div style="position:relative;width:100%;height:210px">
-            <canvas id="bar-chart" role="img" aria-label="Bar chart jumlah per tipe">Jumlah per tipe</canvas>
-          </div>
+          <div style="position:relative;width:100%;height:210px"><canvas id="bar-chart"></canvas></div>
         </div>
       </div>
- 
       <div class="sec-label-v2"><i class="fas fa-table-cells" style="font-size:12px"></i> Ringkasan per tipe</div>
       <div class="filetype-grid" id="filetype-grid"></div>
- 
       <div class="sec-label-v2" style="margin-top:20px"><i class="fas fa-clock-rotate-left" style="font-size:12px"></i> Upload 7 hari terakhir</div>
-      <div class="history-card-v2">
-        <div class="upload-history" id="upload-history"></div>
-      </div>
+      <div class="history-card-v2"><div class="upload-history" id="upload-history"></div></div>
     </div>
   </div>
 </div>
- 
+
 <!-- FILE VIEWER -->
 <div id="modal-viewer">
   <div class="viewer-topbar">
@@ -1234,9 +1028,9 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
   </div>
   <div class="viewer-body" id="viewer-body"></div>
 </div>
- 
+
 <div id="toast"><i class="fas fa-check-circle"></i><span id="toast-msg"></span></div>
- 
+
 <script>
 const API = '';
 const TOKEN_KEY = 'veilfile_token';
@@ -1250,8 +1044,8 @@ let movingFileId = null;
 let viewerCurrentId = null;
 let viewerCurrentName = null;
 let selectedColor = '#a78bfa';
- 
-/* ── API ─────────────────────────────────────────── */
+
+/* ── API ── */
 async function apiFetch(path, opts={}) {
   const token = localStorage.getItem(TOKEN_KEY);
   const headers = {...(opts.headers||{})};
@@ -1264,8 +1058,8 @@ async function apiFetch(path, opts={}) {
   const data = await res.json().catch(()=>({}));
   return {ok: res.ok, status: res.status, data};
 }
- 
-/* ── PAGE NAV ────────────────────────────────────── */
+
+/* ── PAGE NAV ── */
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p=>{p.classList.remove('active');p.style.display='';});
   const el = document.getElementById('page-'+name);
@@ -1274,8 +1068,8 @@ function showPage(name) {
   clearMsgs();
 }
 function clearMsgs() { document.querySelectorAll('.msg-box').forEach(m=>{m.className='msg-box';m.innerHTML='';}); }
- 
-/* ── UTILS ───────────────────────────────────────── */
+
+/* ── UTILS ── */
 function togglePw(id,btn){const inp=document.getElementById(id);const icon=btn.querySelector('i');inp.type=inp.type==='password'?'text':'password';icon.className=inp.type==='password'?'fas fa-eye':'fas fa-eye-slash';}
 function showMsg(id,type,icon,text){const el=document.getElementById(id);el.className=`msg-box ${type} show`;el.innerHTML=`<i class="fas fa-${icon}"></i><span>${text}</span>`;}
 function formatSize(b){if(!b)return'0 B';if(b<1024)return b+' B';if(b<1048576)return(b/1024).toFixed(1)+' KB';return(b/1048576).toFixed(2)+' MB';}
@@ -1296,8 +1090,8 @@ function getFileType(name){
 }
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');clearMsgs();}
- 
-/* ── AVATAR UI HELPERS ───────────────────────────── */
+
+/* ── AVATAR UI HELPERS ── */
 function renderAvatarEl(el, profile, username) {
   const initial = (profile.displayName || username || '?')[0].toUpperCase();
   const color   = profile.avatarColor || '#a78bfa';
@@ -1309,8 +1103,8 @@ function renderAvatarEl(el, profile, username) {
     el.innerHTML = initial + '<div class="avatar-cam-overlay"><i class="fas fa-camera"></i></div>';
   }
 }
- 
-/* ── AUTH ────────────────────────────────────────── */
+
+/* ── AUTH ── */
 async function doLogin(){
   const identifier=document.getElementById('login-user').value.trim();
   const password=document.getElementById('login-pass').value;
@@ -1324,7 +1118,7 @@ async function doLogin(){
   currentUser=data.user;
   loadDashboard();
 }
- 
+
 async function doRegister(){
   const username=document.getElementById('reg-user').value.trim();
   const email=document.getElementById('reg-email').value.trim();
@@ -1340,24 +1134,22 @@ async function doRegister(){
   showMsg('reg-msg','success','circle-check','Akun berhasil dibuat! Mengarahkan…');
   setTimeout(()=>{['reg-user','reg-email','reg-pass','reg-pass2'].forEach(id=>document.getElementById(id).value='');showPage('login');},1800);
 }
- 
+
 function doLogout(){
   localStorage.removeItem(TOKEN_KEY);currentUser=null;currentFiles=[];currentFolders=[];activeFolderId=null;
   document.getElementById('page-dashboard').style.display='none';
   document.getElementById('file-list').innerHTML='';
   showPage('login');showToast('Berhasil keluar.','success');
 }
- 
-/* ── DASHBOARD ───────────────────────────────────── */
+
+/* ── DASHBOARD ── */
 async function loadDashboard(){
-  /* Selalu ambil data profil terbaru dari server (fix: profil tidak persist setelah refresh) */
   const{ok:pok,data:pdata}=await apiFetch('/api/profile');
   if(pok && pdata && currentUser){
     currentUser.username=pdata.username;
     currentUser.email=pdata.email;
     currentUser.profile=pdata.profile||{};
   }
-
   const profile=currentUser.profile||{};
   const displayName = profile.displayName || currentUser.username;
   document.getElementById('dash-username').textContent = displayName;
@@ -1377,7 +1169,7 @@ async function loadDashboard(){
   showPage('dashboard');
   await loadAll();
 }
- 
+
 async function loadAll(){
   const [{data:fd},{data:fld}]=await Promise.all([apiFetch('/api/files'),apiFetch('/api/folders')]);
   currentFiles=fd.files||[];
@@ -1391,14 +1183,14 @@ async function loadAll(){
   }
   await loadTrash();
 }
- 
-/* ── RENDER ──────────────────────────────────────── */
+
+/* ── RENDER ── */
 function renderAll(){
   const q=(document.getElementById('search-input').value||'').toLowerCase().trim();
   renderBreadcrumb();
   renderFolders(q);
   renderFiles(q);
-   renderPins();
+  renderPins();
 }
 function renderBreadcrumb(){
   const bc=document.getElementById('breadcrumb');
@@ -1461,7 +1253,7 @@ function buildFileCard(file,idx){
     if (selectMode && !e.target.closest('button')) toggleFileSelect(file.id, card);
   });
   card.innerHTML=`
-    <div class="fc-checkbox" onclick="event.stopPropagation();toggleFileSelect('${file.id}',this.closest('.file-card'))"></div>
+    <div class="fc-checkbox"></div>
     <div class="file-icon-wrap ${type}"><i class="fas ${icon}"></i></div>
     <div class="file-info">
       <div class="file-name" title="${file.originalName}">${file.originalName}</div>
@@ -1472,17 +1264,63 @@ function buildFileCard(file,idx){
       </div>
     </div>
     <div class="file-actions">
-      <button class="btn-icon open"     title="Buka"           onclick="openViewer('${file.id}','${file.originalName.replace(/'/g,"\\'")}')"><i class="fas fa-eye"></i></button>
-      <button class="btn-icon btn-pin" title="Sematkan" onclick="openPinModal('${file.id}','${file.originalName.replace(/'/g,"\\'")}')"><i class="fas fa-thumbtack"></i></button>
-      ${isImg?`<button class="btn-icon rmbg" title="Hapus Background" onclick="openRmbgModal('${file.id}','${file.originalName.replace(/'/g,"\\'")}')"><i class="fas fa-eraser"></i></button>`:''}
-      <button class="btn-icon rename"   title="Ubah nama"      onclick="openRenameFileModal('${file.id}','${file.originalName.replace(/'/g,"\\'")}')"><i class="fas fa-pen"></i></button>
-      <button class="btn-icon move"     title="Pindah folder"  onclick="openMoveModal('${file.id}')"><i class="fas fa-folder-open"></i></button>
-      <button class="btn-icon download" title="Unduh"          onclick="downloadFile('${file.id}','${file.originalName.replace(/'/g,"\\'")}')"><i class="fas fa-download"></i></button>
-      <button class="btn-icon delete"   title="Hapus"          onclick="deleteFile('${file.id}',this)"><i class="fas fa-trash"></i></button>
+      <button class="btn-icon open" title="Buka"><i class="fas fa-eye"></i></button>
+      <button class="btn-icon btn-pin" title="Sematkan"><i class="fas fa-thumbtack"></i></button>
+      ${isImg?'<button class="btn-icon rmbg" title="Hapus Background"><i class="fas fa-eraser"></i></button>':''}
+      <button class="btn-icon rename" title="Ubah nama"><i class="fas fa-pen"></i></button>
+      <button class="btn-icon move" title="Pindah folder"><i class="fas fa-folder-open"></i></button>
+      <button class="btn-icon download" title="Unduh"><i class="fas fa-download"></i></button>
+      <button class="btn-icon delete" title="Hapus"><i class="fas fa-trash"></i></button>
     </div>`;
+
+  /* ── Attach events via addEventListener (bukan inline onclick) ── */
+  const btns = card.querySelectorAll('.file-actions .btn-icon');
+  // open
+  card.querySelector('.btn-icon.open').addEventListener('click', e => {
+    e.stopPropagation();
+    openViewer(file.id, file.originalName);
+  });
+  // pin
+  card.querySelector('.btn-icon.btn-pin').addEventListener('click', e => {
+    e.stopPropagation();
+    openPinModal(file.id, file.originalName);
+  });
+  // rmbg (hanya gambar)
+  if (isImg) {
+    card.querySelector('.btn-icon.rmbg').addEventListener('click', e => {
+      e.stopPropagation();
+      openRmbgModal(file.id, file.originalName);
+    });
+  }
+  // rename
+  card.querySelector('.btn-icon.rename').addEventListener('click', e => {
+    e.stopPropagation();
+    openRenameFileModal(file.id, file.originalName);
+  });
+  // move
+  card.querySelector('.btn-icon.move').addEventListener('click', e => {
+    e.stopPropagation();
+    openMoveModal(file.id);
+  });
+  // download
+  card.querySelector('.btn-icon.download').addEventListener('click', e => {
+    e.stopPropagation();
+    downloadFile(file.id, file.originalName);
+  });
+  // delete
+  card.querySelector('.btn-icon.delete').addEventListener('click', e => {
+    e.stopPropagation();
+    deleteFile(file.id, e.currentTarget);
+  });
+  // checkbox
+  card.querySelector('.fc-checkbox').addEventListener('click', e => {
+    e.stopPropagation();
+    toggleFileSelect(file.id, card);
+  });
+
   return card;
 }
- 
+
 function onSearch(){ renderAll(); }
 function goRoot(){ activeFolderId=null; document.getElementById('search-input').value=''; renderAll(); document.getElementById('upload-hint').textContent='File akan masuk ke root (tanpa folder)'; }
 function openFolder(id){
@@ -1492,8 +1330,8 @@ function openFolder(id){
   document.getElementById('upload-hint').textContent=`File akan masuk ke folder "${folder?folder.name:'ini'}"`;
   renderAll();
 }
- 
-/* ── FOLDER CRUD ─────────────────────────────────── */
+
+/* ── FOLDER CRUD ── */
 function openNewFolderModal(){ document.getElementById('folder-name-input').value=''; closeModal('modal-new-folder'); openModal('modal-new-folder'); }
 async function createFolder(){
   const name=document.getElementById('folder-name-input').value.trim();
@@ -1532,8 +1370,8 @@ async function deleteFolderConfirm(id,name){
     showToast('Folder berhasil dihapus.','success');
   }
 }
- 
-/* ── FILE RENAME & MOVE ──────────────────────────── */
+
+/* ── FILE RENAME & MOVE ── */
 function openRenameFileModal(id,name){
   renamingFileId=id;
   document.getElementById('rename-file-input').value=name;
@@ -1583,17 +1421,19 @@ async function moveFile(folderId){
   const dest=folderId?(currentFolders.find(f=>f.id===folderId)||{}).name:'root';
   showToast(`File dipindah ke ${dest}.`,'success');
 }
- 
-/* ── FILE DELETE ─────────────────────────────────── */
+
+/* ── FILE DELETE — FIXED: hapus dari currentFiles dulu, baru loadAll ── */
 async function deleteFile(id, btn){
   btn.innerHTML='<i class="fas fa-spinner fa-spin"></i>';
   btn.disabled=true;
   const{ok}=await apiFetch(`/api/files/${id}`,{method:'DELETE'});
   if(ok){
-    // Filter lokal DULU sebelum renderAll, biar tidak duplikat
-    currentFiles=currentFiles.filter(f=>f.id!==id);
+    // Hapus dari array lokal SEBELUM apapun lainnya
+    currentFiles = currentFiles.filter(f => f.id !== id);
+    // Render langsung dari data lokal yang sudah bersih
     renderAll();
-    await loadAll(); // sync stats + trash badge
+    // Sync stats + trash badge di background (tidak overwrite currentFiles lagi)
+    syncStatsAndTrash();
     showToast('File dipindah ke trash.','success');
   } else {
     btn.innerHTML='<i class="fas fa-trash"></i>';
@@ -1601,8 +1441,19 @@ async function deleteFile(id, btn){
     showToast('Gagal menghapus file.','error');
   }
 }
- 
-/* ── DOWNLOAD ────────────────────────────────────── */
+
+/* Sync stats + trash tanpa re-fetch files (agar tidak overwrite currentFiles) */
+async function syncStatsAndTrash(){
+  const {data:pd} = await apiFetch('/api/profile');
+  if(pd&&pd.stats){
+    document.getElementById('stat-total').textContent=pd.stats.totalFiles;
+    document.getElementById('stat-today').textContent=pd.stats.todayUploads;
+    document.getElementById('stat-size').textContent=formatSize(pd.stats.totalSize);
+  }
+  await loadTrash();
+}
+
+/* ── DOWNLOAD ── */
 function downloadFile(id,name){
   const token=localStorage.getItem(TOKEN_KEY);
   fetch(`${API}/api/files/${id}/download`,{headers:{Authorization:'Bearer '+token}})
@@ -1613,8 +1464,8 @@ function downloadFile(id,name){
       showToast('Mengunduh file…','success');
     }).catch(()=>showToast('Gagal mengunduh.','error'));
 }
- 
-/* ── UPLOAD FILE ─────────────────────────────────── */
+
+/* ── UPLOAD FILE ── */
 async function handleFiles(fileList){
   if(!fileList.length)return;
   const prog=document.getElementById('upload-progress');
@@ -1646,12 +1497,12 @@ async function handleFiles(fileList){
 function handleDrop(e){e.preventDefault();document.getElementById('upload-zone').classList.remove('dragover');handleFiles(e.dataTransfer.files);}
 function handleDragOver(e){e.preventDefault();document.getElementById('upload-zone').classList.add('dragover');}
 function handleDragLeave(){document.getElementById('upload-zone').classList.remove('dragover');}
- 
-/* ── VIEWER ──────────────────────────────────────── */
+
+/* ── VIEWER ── */
 const V_VIDEO=['mp4','webm','ogg','mov'];
 const V_IMAGE=['jpg','jpeg','png','gif','webp','svg','bmp'];
 const V_TEXT=['txt','md','csv','json','js','py','html','css','xml','log','ini','yaml','yml'];
- 
+
 async function openViewer(id,name){
   viewerCurrentId=id;viewerCurrentName=name;
   const modal=document.getElementById('modal-viewer');
@@ -1690,8 +1541,8 @@ function closeViewer(){
   document.getElementById('viewer-body').innerHTML='';
 }
 function viewerDownload(){if(viewerCurrentId)downloadFile(viewerCurrentId,viewerCurrentName);}
- 
-/* ── PROFILE MODAL ───────────────────────────────── */
+
+/* ── PROFILE MODAL ── */
 async function openProfileModal(){
   const{ok,data}=await apiFetch('/api/profile');if(!ok)return;
   const p=data.profile||{};
@@ -1718,7 +1569,6 @@ async function openProfileModal(){
   document.getElementById('color-picker').style.display = p.avatarFile ? 'none' : 'flex';
   document.querySelectorAll('.color-dot').forEach(d=>d.classList.toggle('active',d.dataset.color===selectedColor));
 
-  /* ── Isi tab Lihat Profil ── */
   const viewAv = document.getElementById('view-avatar-big');
   if(p.avatarFile){
     viewAv.style.background='transparent';
@@ -1728,8 +1578,8 @@ async function openProfileModal(){
     viewAv.style.background=`linear-gradient(135deg,${color},${color}99)`;
     viewAv.textContent=(p.displayName||data.username||'?')[0].toUpperCase();
   }
-    viewAv.onclick = p.avatarFile ? openPhotoViewer : null;
-    viewAv.style.cursor = p.avatarFile ? 'pointer' : 'default';
+  viewAv.onclick = p.avatarFile ? openPhotoViewer : null;
+  viewAv.style.cursor = p.avatarFile ? 'pointer' : 'default';
   document.getElementById('view-displayname').textContent=p.displayName||data.username;
   document.getElementById('view-username-tag').textContent='@'+data.username;
   const bioEl=document.getElementById('view-bio-preview');
@@ -1754,13 +1604,12 @@ async function openProfileModal(){
       folderList.appendChild(chip);
     });
   }
-
   switchTab('view');
   openModal('modal-profile');
 }
- 
+
 function closeProfileModal(){closeModal('modal-profile');}
- 
+
 function pickColor(dot){
   selectedColor=dot.dataset.color;
   document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('active'));
@@ -1768,7 +1617,7 @@ function pickColor(dot){
   const av=document.getElementById('modal-avatar');
   av.style.background=`linear-gradient(135deg,${selectedColor},${selectedColor}99)`;
 }
- 
+
 function switchTab(tab){
   const tabs=['view','edit','password','account','delete'];
   const btns=document.querySelectorAll('.tab-btn');
@@ -1777,14 +1626,14 @@ function switchTab(tab){
     if(btns[i]) btns[i].classList.toggle('active',t===tab);
   });
 }
- 
-/* ── FOTO PROFIL ─────────────────────────────────── */
+
+/* ── FOTO PROFIL ── */
 function triggerAvatarUpload(){
   const inp = document.getElementById('avatar-file-input');
   inp.value = '';
   setTimeout(() => inp.click(), 50);
 }
- 
+
 async function uploadAvatar(input){
   const file = input.files[0];
   if (!file) return;
@@ -1817,7 +1666,7 @@ async function uploadAvatar(input){
   document.getElementById('color-picker').style.display      = 'none';
   showToast('Foto profil berhasil diperbarui!', 'success');
 }
- 
+
 async function removeAvatar(){
   if (!confirm('Hapus foto profil? Kamu akan kembali ke avatar inisial.')) return;
   const {ok, data} = await apiFetch('/api/profile/avatar', {method:'DELETE'});
@@ -1836,8 +1685,8 @@ async function removeAvatar(){
   document.getElementById('color-picker').style.display      = 'flex';
   showToast('Foto profil berhasil dihapus.', 'success');
 }
- 
-/* ── EDIT PROFIL ─────────────────────────────────── */
+
+/* ── EDIT PROFIL ── */
 async function saveProfile(){
   const displayName=document.getElementById('profile-displayname').value.trim();
   const bio=document.getElementById('profile-bio').value.trim();
@@ -1857,8 +1706,8 @@ async function saveProfile(){
   }
   if (currentUser.profile) { currentUser.profile.displayName = name; currentUser.profile.avatarColor = selectedColor; }
 }
- 
-/* ── GANTI PASSWORD ──────────────────────────────── */
+
+/* ── GANTI PASSWORD ── */
 async function changePassword(){
   const currentPassword=document.getElementById('pw-current').value;
   const newPassword=document.getElementById('pw-new').value;
@@ -1870,39 +1719,22 @@ async function changePassword(){
   showMsg('pw-msg','success','circle-check','Password berhasil diperbarui!');
   ['pw-current','pw-new','pw-confirm'].forEach(id=>document.getElementById(id).value='');
 }
- 
-/* ── GANTI AKUN ──────────────────────────────────── */
+
+/* ── GANTI AKUN ── */
 async function changeAccount(){
   const newUsername = document.getElementById('acc-username').value.trim();
   const newEmail    = document.getElementById('acc-email').value.trim();
   const password    = document.getElementById('acc-password').value;
-
-  if(!newUsername && !newEmail){
-    showMsg('account-msg','error','circle-exclamation','Isi minimal username atau email baru.');
-    return;
-  }
-  if(!password){
-    showMsg('account-msg','error','circle-exclamation','Password konfirmasi wajib diisi.');
-    return;
-  }
-
+  if(!newUsername && !newEmail){showMsg('account-msg','error','circle-exclamation','Isi minimal username atau email baru.');return;}
+  if(!password){showMsg('account-msg','error','circle-exclamation','Password konfirmasi wajib diisi.');return;}
   const btn = document.querySelector('#tab-account .btn-primary');
   if(btn){btn.disabled=true;btn.innerHTML='<i class="fas fa-spinner fa-spin" style="margin-right:8px"></i>Memproses…';}
-
-  // Kirim hanya field yang diisi
   const payload = { password };
   if(newUsername) payload.username = newUsername;
   if(newEmail)    payload.email    = newEmail;
-
   const {ok, data} = await apiFetch('/api/profile/account', {method:'PUT', body: payload});
-
   if(btn){btn.disabled=false;btn.innerHTML='<i class="fas fa-user-pen" style="margin-right:8px"></i>Simpan Perubahan Akun';}
-
-  if(!ok){
-    showMsg('account-msg','error','circle-xmark', data.error||'Gagal memperbarui akun.');
-    return;
-  }
-
+  if(!ok){showMsg('account-msg','error','circle-xmark', data.error||'Gagal memperbarui akun.');return;}
   localStorage.setItem(TOKEN_KEY, data.token);
   currentUser = data.user;
   document.getElementById('dash-username').textContent = data.user.profile?.displayName || data.user.username;
@@ -1913,8 +1745,8 @@ async function changeAccount(){
   document.getElementById('acc-email').value    = '';
   document.getElementById('acc-password').value = '';
 }
- 
-/* ── HAPUS AKUN ──────────────────────────────────── */
+
+/* ── HAPUS AKUN ── */
 async function deleteAccount(){
   const password    = document.getElementById('del-password').value;
   const confirmText = document.getElementById('del-confirm-text').value.trim();
@@ -1935,8 +1767,8 @@ async function deleteAccount(){
   showPage('login');
   showToast('Akun berhasil dihapus. Sampai jumpa!','success');
 }
- 
-/* ── REMOVE BG ───────────────────────────────────── */
+
+/* ── REMOVE BG ── */
 let rmbgResultFile = null;
 async function openRmbgModal(fileId, fileName) {
   rmbgResultFile = null;
@@ -1954,7 +1786,7 @@ async function openRmbgModal(fileId, fileName) {
   rmbgResultFile = data.file;
   currentFiles.push(data.file);
   renderAll();
-  await loadAll();
+  await syncStatsAndTrash();
   const token = localStorage.getItem(TOKEN_KEY);
   const blob  = await fetch(`${API}/api/files/${data.file.id}/download`, { headers: { Authorization: 'Bearer ' + token } }).then(r => r.blob()).catch(() => null);
   if (blob) document.getElementById('rmbg-preview-img').src = URL.createObjectURL(blob);
@@ -1962,8 +1794,8 @@ async function openRmbgModal(fileId, fileName) {
 }
 function rmbgSave() { closeModal('modal-rmbg'); showToast('File tersimpan di daftar file kamu!', 'success'); }
 function rmbgDownload() { if (rmbgResultFile) downloadFile(rmbgResultFile.id, rmbgResultFile.originalName); }
- 
-/* ── TOAST ───────────────────────────────────────── */
+
+/* ── TOAST ── */
 let toastTimer;
 function showToast(msg,type='success'){
   const t=document.getElementById('toast');const icon=t.querySelector('i');
@@ -1972,12 +1804,12 @@ function showToast(msg,type='success'){
   document.getElementById('toast-msg').textContent=msg;
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.className='';},3200);
 }
- 
-/* ── KEYBOARD ────────────────────────────────────── */
+
+/* ── KEYBOARD ── */
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
     if(document.getElementById('modal-viewer').classList.contains('open'))closeViewer();
-    ['modal-profile','modal-new-folder','modal-rename-folder','modal-rename-file','modal-move-file','modal-rmbg','modal-bulk-move'].forEach(id=>{
+    ['modal-profile','modal-new-folder','modal-rename-folder','modal-rename-file','modal-move-file','modal-rmbg','modal-bulk-move','modal-trash','modal-pin','modal-set-folder-pin','modal-unlock-folder','modal-photo-viewer'].forEach(id=>{
       if(document.getElementById(id).classList.contains('open'))closeModal(id);
     });
   }
@@ -1987,8 +1819,8 @@ document.addEventListener('keydown',e=>{
     if(active.id==='page-register')doRegister();
   }
 });
- 
-/* ── INIT ────────────────────────────────────────── */
+
+/* ── INIT ── */
 window.addEventListener('load',async()=>{
   setTimeout(async()=>{
     document.getElementById('page-loader').classList.add('hidden');
@@ -2000,10 +1832,10 @@ window.addEventListener('load',async()=>{
     } else showPage('login');
   },1000);
 });
- 
-/* ── SCANNER ─────────────────────────────────── */
+
+/* ── SCANNER ── */
 let scanImageFile = null;
- 
+
 function goToScanner() {
   const profile = currentUser?.profile || {};
   const displayName = profile.displayName || currentUser?.username || 'User';
@@ -2022,13 +1854,13 @@ function goToScanner() {
   showPage('scanner');
   document.getElementById('page-scanner').style.display = 'flex';
 }
- 
+
 function goToDashboard() {
   document.getElementById('page-scanner').style.display = 'none';
   document.getElementById('page-stats').style.display = 'none';
   showPage('dashboard');
 }
- 
+
 function handleScanFile(file) {
   if (!file) return;
   if (!file.type.startsWith('image/')) { showToast('File harus berupa gambar.', 'error'); return; }
@@ -2042,14 +1874,14 @@ function handleScanFile(file) {
   };
   reader.readAsDataURL(file);
 }
- 
+
 function handleScanDrop(e) {
   e.preventDefault();
   document.getElementById('scan-drop-zone').classList.remove('dragover');
   const file = e.dataTransfer.files[0];
   if (file) handleScanFile(file);
 }
- 
+
 function clearScanImage() {
   scanImageFile = null;
   document.getElementById('scan-preview-img').src = '';
@@ -2058,7 +1890,7 @@ function clearScanImage() {
   document.getElementById('btn-scan').disabled = true;
   document.getElementById('scan-file-input').value = '';
 }
- 
+
 async function doGoogleLensScan() {
   if (!scanImageFile) return;
   const btn = document.getElementById('btn-scan');
@@ -2080,19 +1912,18 @@ async function doGoogleLensScan() {
     window.open(lensUrl, '_blank');
     showToast('Membuka Google Lens...', 'success');
   } catch (err) {
-    console.error(err);
     showToast('Gagal: ' + err.message, 'error');
   } finally {
     btn.disabled = false;
     btn.innerHTML = originalText;
   }
 }
- 
+
 /* ── THEME TOGGLE ── */
 function toggleTheme(){
   const isLight = document.body.classList.toggle('light-mode');
   const icon = document.getElementById('theme-icon');
-  icon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
+  if(icon) icon.className = isLight ? 'fas fa-moon' : 'fas fa-sun';
   localStorage.setItem('veilfile_theme', isLight ? 'light' : 'dark');
 }
 (function(){
@@ -2105,7 +1936,7 @@ function toggleTheme(){
     }, 100);
   }
 })();
- 
+
 /* ── STATS PAGE ── */
 function goToStats() {
   const profile = currentUser?.profile || {};
@@ -2125,11 +1956,11 @@ function goToStats() {
   showPage('stats');
   renderStats();
 }
- 
-/* ── renderStats() v3 BRIGHT (Chart.js) ── */
+
+/* ── renderStats() ── */
 let _donutInst = null;
 let _barInst   = null;
- 
+
 function renderStats() {
   const TYPE_META = {
     'pdf':  { label:'PDF',     color:'#ff6b9d', border:'#ff4081', bg:'rgba(255,107,157,0.12)', bc:'rgba(255,107,157,0.3)'  },
@@ -2142,11 +1973,11 @@ function renderStats() {
     'other':{ label:'Lainnya', color:'#cbd5e1', border:'#94a3b8', bg:'rgba(203,213,225,0.08)', bc:'rgba(203,213,225,0.2)'  },
   };
   const H_COLORS = ['#ff6b9d','#fb923c','#fde047','#4ade80','#38bdf8','#c084fc','#67e8f9'];
- 
+
   document.getElementById('stats-total-files').textContent   = currentFiles.length;
   document.getElementById('stats-total-size').textContent    = formatSize(currentFiles.reduce((a,f)=>a+f.size,0));
   document.getElementById('stats-total-folders').textContent = currentFolders.length;
- 
+
   const counts = {};
   currentFiles.forEach(f => {
     const { type } = getFileType(f.originalName || '');
@@ -2154,27 +1985,24 @@ function renderStats() {
   });
   const entries = Object.entries(counts);
   const total   = entries.reduce((a,[,v])=>a+v, 0);
- 
+
   const b1 = document.getElementById('badge-total');
   const b2 = document.getElementById('badge-types');
   if (b1) b1.textContent = total + ' file';
   if (b2) b2.textContent = entries.length + ' tipe';
- 
+
   function buildLegend(id) {
     const el = document.getElementById(id);
     if (!el) return;
     el.innerHTML = entries.map(([type, count]) => {
       const m = TYPE_META[type] || { label: type, color: '#cbd5e1' };
       const pct = total ? Math.round(count/total*100) : 0;
-      return `<span class="chart-leg-item">
-        <span class="chart-leg-sq" style="background:${m.color}"></span>
-        ${m.label} · ${pct}%
-      </span>`;
+      return `<span class="chart-leg-item"><span class="chart-leg-sq" style="background:${m.color}"></span>${m.label} · ${pct}%</span>`;
     }).join('');
   }
   buildLegend('legend-donut');
   buildLegend('legend-bar');
- 
+
   const tooltipCfg = {
     backgroundColor: 'rgba(8,8,20,0.97)',
     borderColor: 'rgba(192,132,252,0.4)',
@@ -2184,8 +2012,7 @@ function renderStats() {
     padding: 12,
     cornerRadius: 10,
   };
- 
-  /* Donut */
+
   const dc = document.getElementById('donut-chart');
   if (_donutInst) { _donutInst.destroy(); _donutInst = null; }
   if (dc) {
@@ -2194,24 +2021,17 @@ function renderStats() {
       data: {
         labels: entries.map(([t]) => (TYPE_META[t]||{label:t}).label),
         datasets: [{
-          data:            entries.map(([,v])=>v),
+          data: entries.map(([,v])=>v),
           backgroundColor: entries.map(([t]) => (TYPE_META[t]||{color:'#cbd5e1'}).color + 'cc'),
           borderColor:     entries.map(([t]) => (TYPE_META[t]||{border:'#94a3b8'}).border),
-          borderWidth: 2.5,
-          hoverBorderWidth: 3.5,
-          hoverOffset: 10,
+          borderWidth: 2.5, hoverBorderWidth: 3.5, hoverOffset: 10,
         }]
       },
       options: {
         responsive: true, maintainAspectRatio: false, cutout: '64%',
         plugins: {
           legend: { display: false },
-          tooltip: {
-            ...tooltipCfg,
-            callbacks: {
-              label: ctx => `  ${ctx.label}: ${ctx.raw} file (${total ? Math.round(ctx.raw/total*100) : 0}%)`
-            }
-          }
+          tooltip: { ...tooltipCfg, callbacks: { label: ctx => `  ${ctx.label}: ${ctx.raw} file (${total ? Math.round(ctx.raw/total*100) : 0}%)` } }
         },
         animation: { animateRotate: true, duration: 1000, easing: 'easeInOutQuart' }
       },
@@ -2233,8 +2053,7 @@ function renderStats() {
       }]
     });
   }
- 
-  /* Bar */
+
   const bc = document.getElementById('bar-chart');
   if (_barInst) { _barInst.destroy(); _barInst = null; }
   if (bc && entries.length) {
@@ -2243,39 +2062,24 @@ function renderStats() {
       data: {
         labels: entries.map(([t]) => (TYPE_META[t]||{label:t}).label),
         datasets: [{
-          data:            entries.map(([,v])=>v),
+          data: entries.map(([,v])=>v),
           backgroundColor: entries.map(([t]) => (TYPE_META[t]||{color:'#cbd5e1'}).color + '88'),
           borderColor:     entries.map(([t]) => (TYPE_META[t]||{border:'#94a3b8'}).border),
-          borderWidth: 2,
-          borderRadius: 8,
-          borderSkipped: false,
+          borderWidth: 2, borderRadius: 8, borderSkipped: false,
         }]
       },
       options: {
         responsive: true, maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          tooltip: { ...tooltipCfg, callbacks: { label: ctx => `  ${ctx.raw} file` } }
-        },
+        plugins: { legend: { display: false }, tooltip: { ...tooltipCfg, callbacks: { label: ctx => `  ${ctx.raw} file` } } },
         scales: {
-          x: {
-            grid:   { color: 'rgba(255,255,255,0.04)' },
-            ticks:  { color: 'rgba(241,245,249,0.55)', font: { size: 10.5 }, autoSkip: false },
-            border: { color: 'rgba(255,255,255,0.12)', width: 1 }
-          },
-          y: {
-            beginAtZero: true,
-            grid:   { color: 'rgba(255,255,255,0.05)' },
-            ticks:  { color: 'rgba(241,245,249,0.55)', font: { size: 10.5 }, stepSize: 1 },
-            border: { color: 'rgba(255,255,255,0.12)', width: 1 }
-          }
+          x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: 'rgba(241,245,249,0.55)', font: { size: 10.5 }, autoSkip: false }, border: { color: 'rgba(255,255,255,0.12)', width: 1 } },
+          y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: 'rgba(241,245,249,0.55)', font: { size: 10.5 }, stepSize: 1 }, border: { color: 'rgba(255,255,255,0.12)', width: 1 } }
         },
         animation: { duration: 1000, easing: 'easeInOutQuart' }
       }
     });
   }
- 
-  /* Type Cards */
+
   const grid = document.getElementById('filetype-grid');
   if (grid) {
     grid.innerHTML = '';
@@ -2298,8 +2102,7 @@ function renderStats() {
       grid.appendChild(div);
     });
   }
- 
-  /* History bars */
+
   const history = document.getElementById('upload-history');
   if (!history) return;
   history.innerHTML = '';
@@ -2311,7 +2114,7 @@ function renderStats() {
     const str = d.toISOString().split('T')[0];
     return currentFiles.filter(f => f.uploadedAt && f.uploadedAt.startsWith(str)).length;
   }), 1);
- 
+
   days.forEach((d, i) => {
     const str   = d.toISOString().split('T')[0];
     const count = currentFiles.filter(f => f.uploadedAt && f.uploadedAt.startsWith(str)).length;
@@ -2322,14 +2125,11 @@ function renderStats() {
     row.innerHTML = `
       <div class="upload-bar-label">${label}</div>
       <div class="hbar-track-v2">
-        <div class="upload-bar-fill" data-pct="${pct}"
-          style="width:0%;height:100%;border-radius:10px;background:${H_COLORS[i]}">
-        </div>
+        <div class="upload-bar-fill" data-pct="${pct}" style="width:0%;height:100%;border-radius:10px;background:${H_COLORS[i]}"></div>
       </div>
       <div class="upload-bar-val" style="color:${H_COLORS[i]};font-weight:700">${count}</div>`;
     history.appendChild(row);
   });
- 
   setTimeout(() => {
     document.querySelectorAll('.upload-bar-fill').forEach(el => {
       el.style.transition = 'width 1s cubic-bezier(.4,0,.2,1)';
@@ -2337,11 +2137,11 @@ function renderStats() {
     });
   }, 120);
 }
- 
+
 /* ── MULTI-SELECT ── */
 let selectMode    = false;
 let selectedFiles = new Set();
- 
+
 function toggleSelectMode() {
   if (selectMode) { exitSelectMode(); return; }
   selectMode = true;
@@ -2351,7 +2151,7 @@ function toggleSelectMode() {
   document.getElementById('btn-select-mode').classList.add('active');
   updateSelectCount();
 }
- 
+
 function exitSelectMode() {
   selectMode = false;
   selectedFiles.clear();
@@ -2360,13 +2160,12 @@ function exitSelectMode() {
   document.getElementById('btn-select-mode').classList.remove('active');
   document.querySelectorAll('.file-card.selected').forEach(c => c.classList.remove('selected'));
 }
- 
+
 function updateSelectCount() {
   const n = selectedFiles.size;
-  document.getElementById('select-count').textContent =
-    n === 0 ? 'Belum ada file dipilih' : `${n} file dipilih`;
+  document.getElementById('select-count').textContent = n === 0 ? 'Belum ada file dipilih' : `${n} file dipilih`;
 }
- 
+
 function toggleFileSelect(fileId, cardEl) {
   if (!selectMode) return;
   if (selectedFiles.has(fileId)) {
@@ -2378,7 +2177,7 @@ function toggleFileSelect(fileId, cardEl) {
   }
   updateSelectCount();
 }
- 
+
 function selectAllFiles() {
   const q = (document.getElementById('search-input').value || '').toLowerCase().trim();
   let visible = currentFiles.filter(f => f.folderId === (activeFolderId || null));
@@ -2399,12 +2198,11 @@ function selectAllFiles() {
   }
   updateSelectCount();
 }
- 
-/* ── Bulk Delete ── */
+
 async function bulkDeleteFiles() {
   if (selectedFiles.size === 0) { showToast('Belum ada file yang dipilih.', 'error'); return; }
   const n = selectedFiles.size;
-  if (!confirm(`Hapus ${n} file sekaligus? Tindakan ini tidak bisa dibatalkan.`)) return;
+  if (!confirm(`Hapus ${n} file sekaligus?`)) return;
   const ids = [...selectedFiles];
   let deleted = 0;
   for (const id of ids) {
@@ -2413,11 +2211,10 @@ async function bulkDeleteFiles() {
   }
   exitSelectMode();
   renderAll();
-  await loadAll();
+  await syncStatsAndTrash();
   showToast(`${deleted} file dipindah ke trash.`, 'success');
 }
- 
-/* ── Bulk Move ── */
+
 function openBulkMoveModal() {
   if (selectedFiles.size === 0) { showToast('Belum ada file yang dipilih.', 'error'); return; }
   document.getElementById('bulk-move-hint').textContent = `Memindahkan ${selectedFiles.size} file`;
@@ -2442,7 +2239,7 @@ function openBulkMoveModal() {
   }
   openModal('modal-bulk-move');
 }
- 
+
 async function executeBulkMove(folderId) {
   const ids = [...selectedFiles];
   let moved = 0;
@@ -2460,7 +2257,8 @@ async function executeBulkMove(folderId) {
   const dest = folderId ? (currentFolders.find(f => f.id === folderId) || {}).name : 'root';
   showToast(`${moved} file dipindah ke ${dest}.`, 'success');
 }
-/* ── PIN FEATURE ── */
+
+/* ── PIN FEATURE — FIXED: gunakan addEventListener bukan inline onclick ── */
 const PINS_KEY = 'veilfile_pins';
 
 function getPins() {
@@ -2494,13 +2292,13 @@ function submitPin() {
   showToast(`File disematkan sebagai "${label}"!`, 'success');
 }
 
+/* FIXED: renderPins — tombol unpin pakai addEventListener bukan onclick inline */
 function renderPins() {
   const pins    = getPins();
   const section = document.getElementById('pins-section');
   const grid    = document.getElementById('pins-grid');
   const countEl = document.getElementById('pin-count');
 
-  // Filter pins: only show files that still exist in currentFiles
   const validPins = pins.filter(p => currentFiles.some(f => f.id === p.fileId));
   if (validPins.length !== pins.length) savePins(validPins);
 
@@ -2511,26 +2309,54 @@ function renderPins() {
   validPins.forEach((pin, i) => {
     const file = currentFiles.find(f => f.id === pin.fileId);
     if (!file) return;
-    const { icon, type } = getFileType(file.originalName || '');
+    const { icon } = getFileType(file.originalName || '');
+
     const card = document.createElement('div');
     card.className = 'pin-card';
     card.style.animationDelay = (i * .05) + 's';
-    card.innerHTML = `
-      <button class="btn-unpin" title="Lepas pin" onclick="event.stopPropagation();event.preventDefault();unpinFile('${pin.fileId}');return false;">
-        <i class="fas fa-times"></i>
-      </button>
-      <div class="pin-label-badge">
-        <i class="fas fa-thumbtack" style="font-size:9px"></i>
-        ${pin.label}
-      </div>
-      <div class="pin-filename">
-        <i class="fas ${icon}" style="margin-right:4px;font-size:12px"></i>${file.originalName}
-      </div>
-      <div class="pin-meta">${formatSize(file.size)} · ${new Date(file.uploadedAt).toLocaleDateString('id-ID',{day:'2-digit',month:'short'})}</div>`;
+
+    // Tombol unpin — dibuat terpisah, event listener eksplisit
+    const unpinBtn = document.createElement('button');
+    unpinBtn.className = 'btn-unpin';
+    unpinBtn.title = 'Lepas pin';
+    unpinBtn.innerHTML = '<i class="fas fa-times"></i>';
+    unpinBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      e.preventDefault();
+      unpinFile(pin.fileId);
+    });
+
+    const labelBadge = document.createElement('div');
+    labelBadge.className = 'pin-label-badge';
+    labelBadge.innerHTML = `<i class="fas fa-thumbtack" style="font-size:9px"></i> ${pin.label}`;
+
+    const filename = document.createElement('div');
+    filename.className = 'pin-filename';
+    filename.innerHTML = `<i class="fas ${icon}" style="margin-right:4px;font-size:12px"></i>${file.originalName}`;
+
+    const meta = document.createElement('div');
+    meta.className = 'pin-meta';
+    meta.textContent = `${formatSize(file.size)} · ${new Date(file.uploadedAt).toLocaleDateString('id-ID',{day:'2-digit',month:'short'})}`;
+
+    card.appendChild(unpinBtn);
+    card.appendChild(labelBadge);
+    card.appendChild(filename);
+    card.appendChild(meta);
+
+    // Klik card → buka viewer
     card.addEventListener('click', () => openViewer(pin.fileId, file.originalName));
+
     grid.appendChild(card);
   });
 }
+
+function unpinFile(fileId) {
+  const pins = getPins().filter(p => p.fileId !== fileId);
+  savePins(pins);
+  renderPins();
+  showToast('Pin dihapus.', 'success');
+}
+
 /* ── FOLDER LOCK ── */
 const FOLDER_LOCKS_KEY = 'veilfile_folder_locks';
 
@@ -2544,7 +2370,6 @@ function isFolderLocked(folderId) {
   return !!getFolderLocks()[folderId];
 }
 
-/* Coba buka folder — kalau terkunci tampilkan modal unlock */
 function tryOpenFolder(id, name) {
   if (isFolderLocked(id)) {
     openUnlockModal(id, name);
@@ -2554,10 +2379,10 @@ function tryOpenFolder(id, name) {
 }
 
 /* ── SET PIN ── */
-let setPinFolderId   = null;
-let setPinStep       = 'set'; // 'set' | 'confirm'
-let setPinFirst      = '';
-let setPinCurrent    = '';
+let setPinFolderId = null;
+let setPinStep     = 'set';
+let setPinFirst    = '';
+let setPinCurrent  = '';
 
 function openSetFolderPin(folderId, folderName) {
   setPinFolderId = folderId;
@@ -2625,7 +2450,7 @@ function openUnlockModal(id, name) {
   unlockFolderId   = id;
   unlockFolderName = name;
   unlockCurrent    = '';
-  unlockVerified   = false; 
+  unlockVerified   = false;
   document.getElementById('unlock-folder-name').textContent = '📁 ' + name;
   updateUnlockDots();
   clearMsgs();
@@ -2644,7 +2469,7 @@ function onUnlockKey(key) {
     setTimeout(() => {
       const locks = getFolderLocks();
       if (unlockCurrent === locks[unlockFolderId]) {
-        unlockVerified = true; // tandai PIN sudah terverifikasi
+        unlockVerified = true;
         closeModal('modal-unlock-folder');
         openFolder(unlockFolderId);
         showToast('Folder dibuka!', 'success');
@@ -2674,7 +2499,7 @@ function removeFolderLock() {
   const locks = getFolderLocks();
   delete locks[unlockFolderId];
   saveFolderLocks(locks);
-  unlockVerified = false; // reset flag
+  unlockVerified = false;
   closeModal('modal-unlock-folder');
   renderAll();
   showToast('PIN folder dihapus.', 'success');
@@ -2694,12 +2519,13 @@ function buildNumpad(containerId, handler) {
     container.appendChild(btn);
   });
 }
-/* ── PHOTO VIEWER / ZOOM ── */
+
+/* ── PHOTO VIEWER ── */
 let _photoZoom = 1.0;
 
 function openPhotoViewer() {
   const profile = currentUser?.profile || {};
-  if (!profile.avatarFile) return; // hanya untuk foto, bukan inisial
+  if (!profile.avatarFile) return;
   const img = document.getElementById('photo-viewer-img');
   img.src = `/api/profile/avatar/${currentUser.id}?t=${Date.now()}`;
   _photoZoom = 1.0;
@@ -2709,7 +2535,6 @@ function openPhotoViewer() {
 }
 
 function closePhotoViewer(e) {
-  // tutup jika klik di overlay (bukan di konten dalam)
   if (e.target === document.getElementById('modal-photo-viewer')) {
     closeModal('modal-photo-viewer');
   }
@@ -2729,12 +2554,12 @@ function resetZoom() {
   document.getElementById('zoom-level').textContent = '100%';
 }
 
-// Scroll to zoom
 document.addEventListener('wheel', function(e) {
   if (!document.getElementById('modal-photo-viewer').classList.contains('open')) return;
   e.preventDefault();
   zoomPhoto(e.deltaY < 0 ? 0.15 : -0.15);
 }, { passive: false });
+
 /* ── TRASH ── */
 let trashFiles = [];
 
@@ -2743,7 +2568,7 @@ async function loadTrash() {
   if (!ok) return;
   trashFiles = data.files || [];
   const count = trashFiles.length;
-  const countEl = document.getElementById('trash-count');
+  const countEl  = document.getElementById('trash-count');
   const countEl2 = document.getElementById('trash-modal-count');
   countEl.style.display = count > 0 ? 'flex' : 'none';
   countEl.textContent = count;
@@ -2780,20 +2605,15 @@ function renderTrash() {
         <div class="file-name">${f.originalName}</div>
         <div class="file-meta">
           <span class="file-size">${formatSize(f.size)}</span>
-          <span class="trash-deleted-at">
-            <i class="fas fa-clock" style="margin-right:3px"></i>
-            Dihapus ${formatDate(f.deletedAt)}
-          </span>
+          <span class="trash-deleted-at"><i class="fas fa-clock" style="margin-right:3px"></i>Dihapus ${formatDate(f.deletedAt)}</span>
         </div>
       </div>
       <div class="trash-actions">
-        <button class="btn-icon restore" title="Restore" onclick="restoreFile('${f.id}')">
-          <i class="fas fa-rotate-left"></i>
-        </button>
-        <button class="btn-icon delete" title="Hapus Permanen" onclick="deletePermanent('${f.id}')">
-          <i class="fas fa-trash"></i>
-        </button>
+        <button class="btn-icon restore" title="Restore"><i class="fas fa-rotate-left"></i></button>
+        <button class="btn-icon delete" title="Hapus Permanen"><i class="fas fa-trash"></i></button>
       </div>`;
+    card.querySelector('.btn-icon.restore').addEventListener('click', () => restoreFile(f.id));
+    card.querySelector('.btn-icon.delete').addEventListener('click', () => deletePermanent(f.id));
     list.appendChild(card);
   });
 }
@@ -2802,8 +2622,8 @@ async function restoreFile(fileId) {
   const { ok, data } = await apiFetch(`/api/trash/${fileId}/restore`, { method: 'POST' });
   if (!ok) { showToast(data.error || 'Gagal restore.', 'error'); return; }
   showToast('File berhasil direstore!', 'success');
-  await loadTrash();
   await loadAll();
+  await loadTrash();
   renderTrash();
 }
 
@@ -2811,23 +2631,14 @@ async function deletePermanent(fileId) {
   if (!confirm('Hapus permanen? File tidak bisa dikembalikan.')) return;
   const { ok, data } = await apiFetch(`/api/trash/${fileId}`, { method: 'DELETE' });
   if (!ok) { showToast(data.error || 'Gagal hapus.', 'error'); return; }
-  // Update lokal dulu tanpa tunggu fetch ulang
   trashFiles = trashFiles.filter(f => f.id !== fileId);
   renderTrash();
-  // Update badge
-  const countEl = document.getElementById('trash-count');
+  const countEl  = document.getElementById('trash-count');
   const countEl2 = document.getElementById('trash-modal-count');
   countEl.style.display = trashFiles.length > 0 ? 'flex' : 'none';
   countEl.textContent = trashFiles.length;
   if (countEl2) countEl2.textContent = trashFiles.length;
   showToast('File dihapus permanen.', 'success');
-}
-
-function unpinFile(fileId) {
-  const pins = getPins().filter(p => p.fileId !== fileId);
-  savePins(pins);
-  renderPins();
-  showToast('Pin dihapus.', 'success');
 }
 
 async function emptyTrash() {
@@ -2839,119 +2650,5 @@ async function emptyTrash() {
   renderTrash();
 }
 </script>
-<!-- PIN MODAL -->
-<div class="modal-overlay small-modal" id="modal-pin">
-  <div class="modal-box" style="max-width:360px;padding:28px">
-    <div class="modal-header">
-      <h3><i class="fas fa-thumbtack" style="color:#fbbf24;margin-right:8px"></i>Sematkan File</h3>
-      <button class="modal-close" onclick="closeModal('modal-pin')"><i class="fas fa-times"></i></button>
-    </div>
-    <div id="pin-msg" class="msg-box"></div>
-    <div class="pin-target-info" id="pin-target-info">
-      <i class="fas fa-file" style="margin-right:6px;color:#fbbf24"></i>
-      <span id="pin-target-name">-</span>
-    </div>
-    <div class="field-group">
-      <label>Nama Pin (Label)</label>
-      <div class="input-wrap">
-        <input type="text" id="pin-label-input" placeholder="cth: Tugas Penting, Referensi…" maxlength="40">
-        <i class="fas fa-tag input-icon"></i>
-      </div>
-    </div>
-    <p style="font-size:11px;color:var(--text-secondary);margin-bottom:14px;margin-top:-8px">
-      Label ini tampil di atas kartu pin kamu
-    </p>
-    <button class="btn-primary" onclick="submitPin()">
-      <i class="fas fa-thumbtack" style="margin-right:8px"></i>Sematkan File
-    </button>
-  </div>
-</div>
-<!-- MODAL SET FOLDER PIN -->
-<div class="modal-overlay small-modal" id="modal-set-folder-pin">
-  <div class="modal-box" style="max-width:320px;padding:28px;text-align:center">
-    <div class="modal-header" style="justify-content:center;position:relative">
-      <h3><i class="fas fa-lock" style="color:var(--error);margin-right:8px"></i>Buat PIN Folder</h3>
-      <button class="modal-close" style="position:absolute;right:0;top:0" onclick="closeModal('modal-set-folder-pin')"><i class="fas fa-times"></i></button>
-    </div>
-    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:4px" id="set-pin-folder-name"></p>
-    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:4px" id="set-pin-step-label">Masukkan PIN baru (4 digit)</p>
-    <div class="pin-dots" id="set-pin-dots">
-      <div class="pin-dot"></div><div class="pin-dot"></div>
-      <div class="pin-dot"></div><div class="pin-dot"></div>
-    </div>
-    <div id="set-pin-msg" class="msg-box" style="margin-bottom:12px"></div>
-    <div class="pin-numpad" id="set-pin-numpad"></div>
-  </div>
-</div>
-
-<!-- MODAL UNLOCK FOLDER -->
-<div class="modal-overlay small-modal" id="modal-unlock-folder">
-  <div class="modal-box" style="max-width:320px;padding:28px;text-align:center">
-    <div class="modal-header" style="justify-content:center;position:relative">
-      <h3><i class="fas fa-lock" style="color:var(--error);margin-right:8px"></i>Folder Terkunci</h3>
-      <button class="modal-close" style="position:absolute;right:0;top:0" onclick="closeModal('modal-unlock-folder')"><i class="fas fa-times"></i></button>
-    </div>
-    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:4px" id="unlock-folder-name"></p>
-    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:4px">Masukkan PIN untuk membuka</p>
-    <div class="pin-dots" id="unlock-pin-dots">
-      <div class="pin-dot"></div><div class="pin-dot"></div>
-      <div class="pin-dot"></div><div class="pin-dot"></div>
-    </div>
-    <div id="unlock-pin-msg" class="msg-box" style="margin-bottom:12px"></div>
-    <div class="pin-numpad" id="unlock-pin-numpad"></div>
-    <button class="btn-danger" style="font-size:12px;padding:10px;margin-top:4px" onclick="removeFolderLock()">
-      <i class="fas fa-trash-can" style="margin-right:6px"></i>Hapus PIN Folder Ini
-    </button>
-  </div>
-</div>
-<!-- MODAL PHOTO VIEWER -->
-<div class="modal-overlay" id="modal-photo-viewer" onclick="closePhotoViewer(event)">
-  <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:16px;max-width:90vw;max-height:90vh">
-    <div style="display:flex;gap:10px;align-items:center">
-      <button onclick="zoomPhoto(-0.2)" style="width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s">
-        <i class="fas fa-magnifying-glass-minus"></i>
-      </button>
-      <span id="zoom-level" style="font-size:13px;color:rgba(255,255,255,0.7);min-width:44px;text-align:center">100%</span>
-      <button onclick="zoomPhoto(0.2)" style="width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s">
-        <i class="fas fa-magnifying-glass-plus"></i>
-      </button>
-      <button onclick="resetZoom()" style="width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s" title="Reset zoom">
-        <i class="fas fa-arrows-to-dot"></i>
-      </button>
-      <button onclick="closeModal('modal-photo-viewer')" style="width:38px;height:38px;border-radius:50%;border:1px solid rgba(252,129,129,0.3);background:rgba(252,129,129,0.15);color:#fc8181;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div style="overflow:hidden;border-radius:16px;max-width:80vw;max-height:75vh;display:flex;align-items:center;justify-content:center">
-      <img id="photo-viewer-img" src="" alt="Foto Profil"
-        style="max-width:80vw;max-height:75vh;border-radius:16px;object-fit:contain;transition:transform 0.25s cubic-bezier(.4,0,.2,1);cursor:grab;user-select:none"
-        ondragstart="return false">
-    </div>
-    <p style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:-4px">Klik di luar foto untuk menutup · Scroll untuk zoom</p>
-  </div>
-</div>
-<!-- MODAL TRASH -->
-<div class="modal-overlay" id="modal-trash">
-  <div class="modal-box" style="max-width:540px">
-    <div class="modal-header">
-      <h3><i class="fas fa-trash-can" style="color:var(--error);margin-right:8px"></i>Trash
-        <span class="badge" id="trash-modal-count" style="background:rgba(252,129,129,0.2);color:var(--error);border:1px solid rgba(252,129,129,0.3);margin-left:8px">0</span>
-      </h3>
-      <button class="modal-close" onclick="closeModal('modal-trash')"><i class="fas fa-times"></i></button>
-    </div>
-    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
-      <button class="btn-danger" id="btn-empty-trash" onclick="emptyTrash()"
-        style="width:auto;padding:9px 16px;font-size:12px;margin-top:0">
-        <i class="fas fa-fire" style="margin-right:6px"></i>Kosongkan Trash
-      </button>
-    </div>
-    <div id="trash-list" style="display:flex;flex-direction:column;gap:10px;max-height:460px;overflow-y:auto">
-      <div class="empty-state" id="trash-empty">
-        <i class="fas fa-trash-can"></i>
-        <p>Trash kosong</p>
-      </div>
-    </div>
-  </div>
-</div>
 </body>
 </html>
