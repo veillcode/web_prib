@@ -2824,10 +2824,7 @@ async function deletePermanent(fileId) {
 }
 
 function unpinFile(fileId) {
-  console.log('unpinFile called:', fileId);
-  console.log('pins before:', getPins());
   const pins = getPins().filter(p => p.fileId !== fileId);
-  console.log('pins after:', pins);
   savePins(pins);
   renderPins();
   showToast('Pin dihapus.', 'success');
