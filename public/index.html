@@ -560,6 +560,69 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
   font-size: 13px; color: var(--text-secondary);
 }
 #modal-pin .pin-target-info span { color: var(--text-primary); font-weight: 600; }
+/* ── FOLDER LOCK FEATURE ── */
+.folder-card.locked {
+  border: 1px solid rgba(252,129,129,0.3);
+  background: rgba(252,129,129,0.05);
+}
+.folder-card.locked .folder-icon {
+  background: rgba(252,129,129,0.15);
+  color: var(--error);
+}
+.folder-lock-badge {
+  position: absolute;
+  bottom: 8px; right: 8px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: rgba(252,129,129,0.15);
+  border: 1px solid rgba(252,129,129,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; color: var(--error);
+}
+.btn-folder-action.lock {
+  background: rgba(252,129,129,0.15);
+  color: var(--error);
+}
+.btn-folder-action.lock:hover { background: var(--error); color: #fff; }
+.btn-folder-action.unlock {
+  background: rgba(104,211,145,0.15);
+  color: var(--success);
+}
+.btn-folder-action.unlock:hover { background: var(--success); color: #000; }
+/* PIN input dots */
+.pin-dots {
+  display: flex; gap: 12px; justify-content: center; margin: 20px 0;
+}
+.pin-dot {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.25);
+  background: transparent; transition: var(--transition);
+}
+.pin-dot.filled { background: var(--accent); border-color: var(--accent); }
+.pin-numpad {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 10px; margin-bottom: 16px;
+}
+.pin-key {
+  padding: 14px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06);
+  color: var(--text-primary); font-size: 18px; font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer; transition: var(--transition); text-align: center;
+}
+.pin-key:hover { background: rgba(167,139,250,0.15); border-color: var(--accent); }
+.pin-key:active { transform: scale(0.94); }
+.pin-key.del { font-size: 14px; color: var(--error); }
+.pin-key.del:hover { background: rgba(252,129,129,0.15); border-color: var(--error); }
+.pin-shake { animation: pinShake .4s ease; }
+@keyframes pinShake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-8px)}
+  40%{transform:translateX(8px)}
+  60%{transform:translateX(-6px)}
+  80%{transform:translateX(6px)}
+}
 </style>
 </head>
 <body>
@@ -1290,18 +1353,21 @@ function renderFolders(q){
   if(currentFolders.length===0)return;
   currentFolders.forEach((folder,i)=>{
     const fileCount=currentFiles.filter(f=>f.folderId===folder.id).length;
+    const locked=isFolderLocked(folder.id);
     const div=document.createElement('div');
-    div.className='folder-card';
+    div.className='folder-card'+(locked?' locked':'');
     div.style.animationDelay=(i*.05)+'s';
     div.innerHTML=`
       <div class="folder-actions">
+        <button class="btn-folder-action lock" title="${locked?'Ubah PIN':'Kunci folder'}" onclick="event.stopPropagation();openSetFolderPin('${folder.id}','${folder.name.replace(/'/g,"\\'")}')"><i class="fas fa-${locked?'key':'lock'}"></i></button>
         <button class="btn-folder-action rename" title="Ubah nama" onclick="event.stopPropagation();openRenameFolderModal('${folder.id}','${folder.name.replace(/'/g,"\\'")}')"><i class="fas fa-pen"></i></button>
         <button class="btn-folder-action del" title="Hapus" onclick="event.stopPropagation();deleteFolderConfirm('${folder.id}','${folder.name.replace(/'/g,"\\'")}')"><i class="fas fa-trash"></i></button>
       </div>
       <div class="folder-icon"><i class="fas fa-folder"></i></div>
+      ${locked?'<div class="folder-lock-badge"><i class="fas fa-lock"></i></div>':''}
       <div class="folder-name" title="${folder.name}">${folder.name}</div>
       <div class="folder-count">${fileCount} file</div>`;
-    div.addEventListener('click',()=>openFolder(folder.id));
+    div.addEventListener('click',()=>tryOpenFolder(folder.id,folder.name));
     grid.appendChild(div);
   });
 }
@@ -2371,6 +2437,161 @@ function renderPins() {
     grid.appendChild(card);
   });
 }
+/* ── FOLDER LOCK ── */
+const FOLDER_LOCKS_KEY = 'veilfile_folder_locks';
+
+function getFolderLocks() {
+  try { return JSON.parse(localStorage.getItem(FOLDER_LOCKS_KEY) || '{}'); } catch { return {}; }
+}
+function saveFolderLocks(locks) {
+  localStorage.setItem(FOLDER_LOCKS_KEY, JSON.stringify(locks));
+}
+function isFolderLocked(folderId) {
+  return !!getFolderLocks()[folderId];
+}
+
+/* Coba buka folder — kalau terkunci tampilkan modal unlock */
+function tryOpenFolder(id, name) {
+  if (isFolderLocked(id)) {
+    openUnlockModal(id, name);
+  } else {
+    openFolder(id);
+  }
+}
+
+/* ── SET PIN ── */
+let setPinFolderId   = null;
+let setPinStep       = 'set'; // 'set' | 'confirm'
+let setPinFirst      = '';
+let setPinCurrent    = '';
+
+function openSetFolderPin(folderId, folderName) {
+  setPinFolderId = folderId;
+  setPinStep     = 'set';
+  setPinFirst    = '';
+  setPinCurrent  = '';
+  document.getElementById('set-pin-folder-name').textContent = '📁 ' + folderName;
+  document.getElementById('set-pin-step-label').textContent  = 'Masukkan PIN baru (4 digit)';
+  updateSetPinDots();
+  clearMsgs();
+  buildNumpad('set-pin-numpad', onSetPinKey);
+  openModal('modal-set-folder-pin');
+}
+
+function onSetPinKey(key) {
+  if (key === 'del') {
+    setPinCurrent = setPinCurrent.slice(0, -1);
+  } else if (setPinCurrent.length < 4) {
+    setPinCurrent += key;
+  }
+  updateSetPinDots();
+  if (setPinCurrent.length === 4) {
+    setTimeout(() => {
+      if (setPinStep === 'set') {
+        setPinFirst   = setPinCurrent;
+        setPinCurrent = '';
+        setPinStep    = 'confirm';
+        document.getElementById('set-pin-step-label').textContent = 'Konfirmasi PIN';
+        updateSetPinDots();
+      } else {
+        if (setPinCurrent === setPinFirst) {
+          const locks = getFolderLocks();
+          locks[setPinFolderId] = setPinCurrent;
+          saveFolderLocks(locks);
+          closeModal('modal-set-folder-pin');
+          renderAll();
+          showToast('Folder berhasil dikunci!', 'success');
+        } else {
+          document.getElementById('set-pin-dots').classList.add('pin-shake');
+          setTimeout(() => document.getElementById('set-pin-dots').classList.remove('pin-shake'), 400);
+          showMsg('set-pin-msg', 'error', 'circle-xmark', 'PIN tidak cocok. Ulangi.');
+          setPinStep    = 'set';
+          setPinFirst   = '';
+          setPinCurrent = '';
+          document.getElementById('set-pin-step-label').textContent = 'Masukkan PIN baru (4 digit)';
+          updateSetPinDots();
+        }
+      }
+    }, 120);
+  }
+}
+
+function updateSetPinDots() {
+  const dots = document.querySelectorAll('#set-pin-dots .pin-dot');
+  dots.forEach((d, i) => d.classList.toggle('filled', i < setPinCurrent.length));
+}
+
+/* ── UNLOCK ── */
+let unlockFolderId   = null;
+let unlockFolderName = null;
+let unlockCurrent    = '';
+
+function openUnlockModal(id, name) {
+  unlockFolderId   = id;
+  unlockFolderName = name;
+  unlockCurrent    = '';
+  document.getElementById('unlock-folder-name').textContent = '📁 ' + name;
+  updateUnlockDots();
+  clearMsgs();
+  buildNumpad('unlock-pin-numpad', onUnlockKey);
+  openModal('modal-unlock-folder');
+}
+
+function onUnlockKey(key) {
+  if (key === 'del') {
+    unlockCurrent = unlockCurrent.slice(0, -1);
+  } else if (unlockCurrent.length < 4) {
+    unlockCurrent += key;
+  }
+  updateUnlockDots();
+  if (unlockCurrent.length === 4) {
+    setTimeout(() => {
+      const locks = getFolderLocks();
+      if (unlockCurrent === locks[unlockFolderId]) {
+        closeModal('modal-unlock-folder');
+        openFolder(unlockFolderId);
+        showToast('Folder dibuka!', 'success');
+      } else {
+        const dotsEl = document.getElementById('unlock-pin-dots');
+        dotsEl.classList.add('pin-shake');
+        setTimeout(() => dotsEl.classList.remove('pin-shake'), 400);
+        showMsg('unlock-pin-msg', 'error', 'circle-xmark', 'PIN salah. Coba lagi.');
+        unlockCurrent = '';
+        updateUnlockDots();
+      }
+    }, 120);
+  }
+}
+
+function updateUnlockDots() {
+  const dots = document.querySelectorAll('#unlock-pin-dots .pin-dot');
+  dots.forEach((d, i) => d.classList.toggle('filled', i < unlockCurrent.length));
+}
+
+function removeFolderLock() {
+  if (!confirm(`Hapus PIN folder "${unlockFolderName}"?`)) return;
+  const locks = getFolderLocks();
+  delete locks[unlockFolderId];
+  saveFolderLocks(locks);
+  closeModal('modal-unlock-folder');
+  renderAll();
+  showToast('PIN folder dihapus.', 'success');
+}
+
+/* ── NUMPAD BUILDER ── */
+function buildNumpad(containerId, handler) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  ['1','2','3','4','5','6','7','8','9','','0','del'].forEach(k => {
+    const btn = document.createElement('button');
+    btn.className = 'pin-key' + (k === 'del' ? ' del' : '');
+    btn.innerHTML = k === 'del' ? '<i class="fas fa-delete-left"></i>' : k === '' ? '' : k;
+    btn.disabled  = k === '';
+    btn.style.visibility = k === '' ? 'hidden' : '';
+    if (k !== '') btn.addEventListener('click', () => handler(k));
+    container.appendChild(btn);
+  });
+}
 </script>
 <!-- PIN MODAL -->
 <div class="modal-overlay small-modal" id="modal-pin">
@@ -2396,6 +2617,44 @@ function renderPins() {
     </p>
     <button class="btn-primary" onclick="submitPin()">
       <i class="fas fa-thumbtack" style="margin-right:8px"></i>Sematkan File
+    </button>
+  </div>
+</div>
+<!-- MODAL SET FOLDER PIN -->
+<div class="modal-overlay small-modal" id="modal-set-folder-pin">
+  <div class="modal-box" style="max-width:320px;padding:28px;text-align:center">
+    <div class="modal-header" style="justify-content:center;position:relative">
+      <h3><i class="fas fa-lock" style="color:var(--error);margin-right:8px"></i>Buat PIN Folder</h3>
+      <button class="modal-close" style="position:absolute;right:0;top:0" onclick="closeModal('modal-set-folder-pin')"><i class="fas fa-times"></i></button>
+    </div>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:4px" id="set-pin-folder-name"></p>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:4px" id="set-pin-step-label">Masukkan PIN baru (4 digit)</p>
+    <div class="pin-dots" id="set-pin-dots">
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+    </div>
+    <div id="set-pin-msg" class="msg-box" style="margin-bottom:12px"></div>
+    <div class="pin-numpad" id="set-pin-numpad"></div>
+  </div>
+</div>
+
+<!-- MODAL UNLOCK FOLDER -->
+<div class="modal-overlay small-modal" id="modal-unlock-folder">
+  <div class="modal-box" style="max-width:320px;padding:28px;text-align:center">
+    <div class="modal-header" style="justify-content:center;position:relative">
+      <h3><i class="fas fa-lock" style="color:var(--error);margin-right:8px"></i>Folder Terkunci</h3>
+      <button class="modal-close" style="position:absolute;right:0;top:0" onclick="closeModal('modal-unlock-folder')"><i class="fas fa-times"></i></button>
+    </div>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:4px" id="unlock-folder-name"></p>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:4px">Masukkan PIN untuk membuka</p>
+    <div class="pin-dots" id="unlock-pin-dots">
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+    </div>
+    <div id="unlock-pin-msg" class="msg-box" style="margin-bottom:12px"></div>
+    <div class="pin-numpad" id="unlock-pin-numpad"></div>
+    <button class="btn-danger" style="font-size:12px;padding:10px;margin-top:4px" onclick="removeFolderLock()">
+      <i class="fas fa-trash-can" style="margin-right:6px"></i>Hapus PIN Folder Ini
     </button>
   </div>
 </div>
