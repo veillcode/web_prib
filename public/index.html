@@ -2811,9 +2811,26 @@ async function deletePermanent(fileId) {
   if (!confirm('Hapus permanen? File tidak bisa dikembalikan.')) return;
   const { ok, data } = await apiFetch(`/api/trash/${fileId}`, { method: 'DELETE' });
   if (!ok) { showToast(data.error || 'Gagal hapus.', 'error'); return; }
-  showToast('File dihapus permanen.', 'success');
-  await loadTrash();
+  // Update lokal dulu tanpa tunggu fetch ulang
+  trashFiles = trashFiles.filter(f => f.id !== fileId);
   renderTrash();
+  // Update badge
+  const countEl = document.getElementById('trash-count');
+  const countEl2 = document.getElementById('trash-modal-count');
+  countEl.style.display = trashFiles.length > 0 ? 'flex' : 'none';
+  countEl.textContent = trashFiles.length;
+  if (countEl2) countEl2.textContent = trashFiles.length;
+  showToast('File dihapus permanen.', 'success');
+}
+
+function unpinFile(fileId) {
+  console.log('unpinFile called:', fileId);
+  console.log('pins before:', getPins());
+  const pins = getPins().filter(p => p.fileId !== fileId);
+  console.log('pins after:', pins);
+  savePins(pins);
+  renderPins();
+  showToast('Pin dihapus.', 'success');
 }
 
 async function emptyTrash() {
