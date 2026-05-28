@@ -2491,13 +2491,6 @@ function submitPin() {
   showToast(`File disematkan sebagai "${label}"!`, 'success');
 }
 
-function unpinFile(fileId) {
-  const pins = getPins().filter(p => p.fileId !== fileId);
-  savePins(pins);
-  renderPins();
-  showToast('Pin dihapus.', 'success');
-}
-
 function renderPins() {
   const pins    = getPins();
   const section = document.getElementById('pins-section');
@@ -2520,7 +2513,7 @@ function renderPins() {
     card.className = 'pin-card';
     card.style.animationDelay = (i * .05) + 's';
     card.innerHTML = `
-      <button class="btn-unpin" title="Lepas pin" onclick="event.stopPropagation();unpinFile('${pin.fileId}')">
+      <button class="btn-unpin" title="Lepas pin" onclick="event.stopPropagation();event.preventDefault();unpinFile('${pin.fileId}');return false;">
         <i class="fas fa-times"></i>
       </button>
       <div class="pin-label-badge">
