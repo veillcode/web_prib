@@ -2728,6 +2728,95 @@ document.addEventListener('wheel', function(e) {
   e.preventDefault();
   zoomPhoto(e.deltaY < 0 ? 0.15 : -0.15);
 }, { passive: false });
+/* ── TRASH ── */
+let trashFiles = [];
+
+async function loadTrash() {
+  const { ok, data } = await apiFetch('/api/trash');
+  if (!ok) return;
+  trashFiles = data.files || [];
+  const count = trashFiles.length;
+  const countEl = document.getElementById('trash-count');
+  const countEl2 = document.getElementById('trash-modal-count');
+  countEl.style.display = count > 0 ? 'flex' : 'none';
+  countEl.textContent = count;
+  if (countEl2) countEl2.textContent = count;
+}
+
+async function openTrashModal() {
+  await loadTrash();
+  renderTrash();
+  openModal('modal-trash');
+}
+
+function renderTrash() {
+  const list  = document.getElementById('trash-list');
+  const empty = document.getElementById('trash-empty');
+  Array.from(list.querySelectorAll('.trash-file-card')).forEach(c => c.remove());
+
+  if (trashFiles.length === 0) {
+    empty.style.display = '';
+    document.getElementById('btn-empty-trash').disabled = true;
+    return;
+  }
+  empty.style.display = 'none';
+  document.getElementById('btn-empty-trash').disabled = false;
+
+  trashFiles.forEach((f, i) => {
+    const { type, icon } = getFileType(f.originalName || '');
+    const card = document.createElement('div');
+    card.className = 'trash-file-card';
+    card.style.animationDelay = (i * .04) + 's';
+    card.innerHTML = `
+      <div class="file-icon-wrap ${type}"><i class="fas ${icon}"></i></div>
+      <div class="file-info" style="flex:1;min-width:0">
+        <div class="file-name">${f.originalName}</div>
+        <div class="file-meta">
+          <span class="file-size">${formatSize(f.size)}</span>
+          <span class="trash-deleted-at">
+            <i class="fas fa-clock" style="margin-right:3px"></i>
+            Dihapus ${formatDate(f.deletedAt)}
+          </span>
+        </div>
+      </div>
+      <div class="trash-actions">
+        <button class="btn-icon restore" title="Restore" onclick="restoreFile('${f.id}')">
+          <i class="fas fa-rotate-left"></i>
+        </button>
+        <button class="btn-icon delete" title="Hapus Permanen" onclick="deletePermanent('${f.id}')">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+async function restoreFile(fileId) {
+  const { ok, data } = await apiFetch(`/api/trash/${fileId}/restore`, { method: 'POST' });
+  if (!ok) { showToast(data.error || 'Gagal restore.', 'error'); return; }
+  showToast('File berhasil direstore!', 'success');
+  await loadTrash();
+  await loadAll();
+  renderTrash();
+}
+
+async function deletePermanent(fileId) {
+  if (!confirm('Hapus permanen? File tidak bisa dikembalikan.')) return;
+  const { ok, data } = await apiFetch(`/api/trash/${fileId}`, { method: 'DELETE' });
+  if (!ok) { showToast(data.error || 'Gagal hapus.', 'error'); return; }
+  showToast('File dihapus permanen.', 'success');
+  await loadTrash();
+  renderTrash();
+}
+
+async function emptyTrash() {
+  if (!confirm(`Hapus semua ${trashFiles.length} file di trash permanen? Tidak bisa dikembalikan!`)) return;
+  const { ok, data } = await apiFetch('/api/trash', { method: 'DELETE' });
+  if (!ok) { showToast(data.error || 'Gagal.', 'error'); return; }
+  showToast(data.message || 'Trash dikosongkan.', 'success');
+  await loadTrash();
+  renderTrash();
+}
 </script>
 <!-- PIN MODAL -->
 <div class="modal-overlay small-modal" id="modal-pin">
