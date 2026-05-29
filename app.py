@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
-import json, os, uuid, bcrypt, jwt, re, mimetypes, shutil
+import json, os, uuid, bcrypt, jwt, re, mimetypes
 from datetime import datetime, timedelta, timezone
 from functools import wraps
 from werkzeug.utils import secure_filename
@@ -14,7 +14,6 @@ UPLOADS_DIR = os.path.join(BASE_DIR, 'uploads')
 PUBLIC_DIR  = os.path.join(BASE_DIR, 'public')
 JWT_SECRET  = os.environ.get('JWT_SECRET', 'veilfile_secret_python_2025')
 PORT        = int(os.environ.get('PORT', 5000))
-RMBG_API_KEY = os.environ.get('REMOVE_BG_API_KEY', '')
 
 os.makedirs(os.path.join(BASE_DIR, 'data'), exist_ok=True)
 os.makedirs(UPLOADS_DIR, exist_ok=True)
@@ -24,8 +23,6 @@ os.makedirs(os.path.join(PUBLIC_DIR, 'avatars'), exist_ok=True)
 
 app = Flask(__name__, static_folder=PUBLIC_DIR, static_url_path='')
 CORS(app)
-
-ALLOWED_AVATAR_EXTS = {'.jpg', '.jpeg', '.png', '.webp', '.gif'}
 
 # ── DB HELPERS ────────────────────────────────────────────────────────────────
 def load_db():
@@ -71,6 +68,7 @@ def make_token(user_id):
     return jwt.encode(payload, JWT_SECRET, algorithm='HS256')
 
 def build_user_response(user, profile, db):
+    # Hanya hitung file yang tidak di trash
     active_files  = [f for f in db['files']
                      if f['userId'] == user['id'] and not f.get('deletedAt')]
     total_files   = len(active_files)
@@ -158,8 +156,8 @@ def login():
 @app.route('/api/auth/verify', methods=['POST'])
 @auth_required
 def verify_token():
-    db   = load_db()
-    user = next((u for u in db['users'] if u['id'] == request.user_id), None)
+    db      = load_db()
+    user    = next((u for u in db['users'] if u['id'] == request.user_id), None)
     if not user:
         return jsonify({'error': 'User tidak ditemukan.'}), 404
     profile = next((p for p in db['profiles'] if p['userId'] == user['id']), {})
@@ -170,8 +168,8 @@ def verify_token():
 @app.route('/api/profile', methods=['GET'])
 @auth_required
 def get_profile():
-    db   = load_db()
-    user = next((u for u in db['users'] if u['id'] == request.user_id), None)
+    db      = load_db()
+    user    = next((u for u in db['users'] if u['id'] == request.user_id), None)
     if not user:
         return jsonify({'error': 'User tidak ditemukan.'}), 404
     profile = next((p for p in db['profiles'] if p['userId'] == user['id']), {})
@@ -283,7 +281,7 @@ def delete_account():
 
     uid = request.user_id
 
-    # Hapus semua file fisik milik user (flat di UPLOADS_DIR)
+    # Hapus semua file fisik milik user
     for f in db['files']:
         if f['userId'] == uid:
             path = os.path.join(UPLOADS_DIR, f.get('storedName', ''))
@@ -297,15 +295,17 @@ def delete_account():
         if os.path.exists(av_path):
             os.remove(av_path)
 
-    db['users']    = [u  for u  in db['users']    if u['id']      != uid]
-    db['profiles'] = [p  for p  in db['profiles'] if p['userId']  != uid]
-    db['files']    = [f  for f  in db['files']    if f['userId']  != uid]
-    db['folders']  = [fo for fo in db['folders']  if fo['userId'] != uid]
+    db['users']    = [u for u in db['users']    if u['id']      != uid]
+    db['profiles'] = [p for p in db['profiles'] if p['userId']  != uid]
+    db['files']    = [f for f in db['files']    if f['userId']  != uid]
+    db['folders']  = [fo for fo in db['folders'] if fo['userId'] != uid]
     save_db(db)
     return jsonify({'message': 'Akun berhasil dihapus.'})
 
 
 # ── AVATAR ────────────────────────────────────────────────────────────────────
+ALLOWED_AVATAR_EXTS = {'.jpg', '.jpeg', '.png', '.webp', '.gif'}
+
 @app.route('/api/profile/avatar', methods=['POST'])
 @auth_required
 def upload_avatar():
@@ -440,6 +440,7 @@ def delete_folder(folder_id):
 @auth_required
 def get_files():
     db    = load_db()
+    # Exclude file yang ada di trash
     files = [f for f in db['files']
              if f['userId'] == request.user_id and not f.get('deletedAt')]
     return jsonify({'files': files})
@@ -521,6 +522,7 @@ def delete_file(file_id):
     if not f:
         return jsonify({'error': 'File tidak ditemukan.'}), 404
 
+    # Soft-delete: tandai deletedAt, file fisik tetap ada
     f['deletedAt'] = now_iso()
     save_db(db)
     return jsonify({'message': 'File dipindah ke trash.'})
@@ -566,6 +568,7 @@ def restore_file(file_id):
     if not f:
         return jsonify({'error': 'File tidak ditemukan di trash.'}), 404
 
+    # Kalau folder sudah dihapus, pindah ke root
     if f.get('folderId'):
         folder_exists = any(fo['id'] == f['folderId'] and fo['userId'] == request.user_id
                             for fo in db['folders'])
@@ -587,6 +590,7 @@ def delete_permanent(file_id):
     if not f:
         return jsonify({'error': 'File tidak ditemukan di trash.'}), 404
 
+    # Hapus file fisik
     path = os.path.join(UPLOADS_DIR, f.get('storedName', ''))
     if os.path.exists(path):
         os.remove(path)
@@ -614,6 +618,8 @@ def empty_trash():
 
 
 # ── REMOVE BACKGROUND ─────────────────────────────────────────────────────────
+RMBG_API_KEY = os.environ.get('REMOVE_BG_API_KEY', '')
+
 @app.route('/api/files/<file_id>/remove-bg', methods=['POST'])
 @auth_required
 def remove_bg(file_id):
