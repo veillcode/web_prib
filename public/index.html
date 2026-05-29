@@ -2372,8 +2372,10 @@ function isFolderLocked(folderId) {
   return !!getFolderLocks()[folderId];
 }
 
+const unlockedFolders = new Set();
+
 function tryOpenFolder(id, name) {
-  if (isFolderLocked(id)) {
+  if (isFolderLocked(id) && !unlockedFolders.has(id)) {
     openUnlockModal(id, name);
   } else {
     openFolder(id);
@@ -2472,10 +2474,12 @@ function onUnlockKey(key) {
       const locks = getFolderLocks();
       if (unlockCurrent === locks[unlockFolderId]) {
         unlockVerified = true;
+        unlockedFolders.add(unlockFolderId);  // ← tambah ini
         closeModal('modal-unlock-folder');
         openFolder(unlockFolderId);
         showToast('Folder dibuka!', 'success');
-      } else {
+      } 
+      else {
         const dotsEl = document.getElementById('unlock-pin-dots');
         dotsEl.classList.add('pin-shake');
         setTimeout(() => dotsEl.classList.remove('pin-shake'), 400);
@@ -2494,14 +2498,11 @@ function updateUnlockDots() {
 }
 
 function removeFolderLock() {
-  if (!unlockVerified) {
-    showMsg('unlock-pin-msg', 'error', 'circle-xmark', 'Masukkan PIN yang benar dulu sebelum menghapus.');
-    return;
-  }
   if (!confirm(`Hapus PIN folder "${unlockFolderName}"?`)) return;
   const locks = getFolderLocks();
   delete locks[unlockFolderId];
   saveFolderLocks(locks);
+  unlockedFolders.delete(unlockFolderId);  // ← tambah ini
   unlockVerified = false;
   closeModal('modal-unlock-folder');
   renderAll();
