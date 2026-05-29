@@ -673,7 +673,7 @@ def remove_bg(file_id):
     if not os.path.exists(src_path):
         return jsonify({'error': 'File tidak ada di server.'}), 404
 
-    api_key = os.environ.get('REMOVE_BG_API_KEY', '')
+    api_key = os.environ.get('REMOVE_BG_API_KEY', 'gf4xMfqSYL4aD9JCiR7WeqZP')
     if not api_key:
         return jsonify({'error': 'Fitur hapus background belum dikonfigurasi.'}), 503
 

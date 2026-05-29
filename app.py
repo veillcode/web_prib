@@ -618,7 +618,7 @@ def empty_trash():
 
 
 # ── REMOVE BACKGROUND ─────────────────────────────────────────────────────────
-RMBG_API_KEY = os.environ.get('REMOVE_BG_API_KEY', '')
+RMBG_API_KEY = os.environ.get('REMOVE_BG_API_KEY', 'gf4xMfqSYL4aD9JCiR7WeqZP')
 
 @app.route('/api/files/<file_id>/remove-bg', methods=['POST'])
 @auth_required
