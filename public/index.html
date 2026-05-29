@@ -844,7 +844,7 @@ body.light-mode #bg-overlay{background:linear-gradient(135deg,rgba(240,242,248,0
     </div>
     <div id="unlock-pin-msg" class="msg-box" style="margin-bottom:12px"></div>
     <div class="pin-numpad" id="unlock-pin-numpad"></div>
-    <button class="btn-danger" style="font-size:12px;padding:10px;margin-top:4px" onclick="removeFolderLock()">
+    <button class="btn-danger" style="font-size:12px;padding:10px;margin-top:4px;opacity:0.4;pointer-events:none" onclick="removeFolderLock()">
       <i class="fas fa-trash-can" style="margin-right:6px"></i>Hapus PIN Folder Ini
     </button>
   </div>
@@ -2474,12 +2474,18 @@ function onUnlockKey(key) {
       const locks = getFolderLocks();
       if (unlockCurrent === locks[unlockFolderId]) {
         unlockVerified = true;
-        unlockedFolders.add(unlockFolderId);  // ← tambah ini
-        closeModal('modal-unlock-folder');
+        unlockedFolders.add(unlockFolderId);
+        // Tampilkan pesan sukses + biarkan modal tetap buka
+        showMsg('unlock-pin-msg', 'success', 'circle-check', 'PIN benar! Folder terbuka. Kamu bisa hapus PIN sekarang.');
+        // Aktifkan tombol hapus PIN dengan visual berbeda
+        const delBtn = document.querySelector('#modal-unlock-folder .btn-danger');
+        if (delBtn) {
+          delBtn.style.opacity = '1';
+          delBtn.style.pointerEvents = 'auto';
+        }
+        // Buka folder di background
         openFolder(unlockFolderId);
-        showToast('Folder dibuka!', 'success');
-      } 
-      else {
+      } else {
         const dotsEl = document.getElementById('unlock-pin-dots');
         dotsEl.classList.add('pin-shake');
         setTimeout(() => dotsEl.classList.remove('pin-shake'), 400);
@@ -2498,11 +2504,15 @@ function updateUnlockDots() {
 }
 
 function removeFolderLock() {
+  if (!unlockVerified) {
+    showMsg('unlock-pin-msg', 'error', 'circle-xmark', 'Masukkan PIN yang benar dulu sebelum menghapus.');
+    return;
+  }
   if (!confirm(`Hapus PIN folder "${unlockFolderName}"?`)) return;
   const locks = getFolderLocks();
   delete locks[unlockFolderId];
   saveFolderLocks(locks);
-  unlockedFolders.delete(unlockFolderId);  // ← tambah ini
+  unlockedFolders.delete(unlockFolderId);
   unlockVerified = false;
   closeModal('modal-unlock-folder');
   renderAll();
